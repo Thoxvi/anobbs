@@ -2,6 +2,7 @@ import logging
 
 import click
 
+from anonymous_bbs.lib import BbsManager
 from . import AppConstant
 
 logger = logging.getLogger(__name__)
@@ -39,4 +40,7 @@ def cli(
 ):
     ctx.ensure_object(dict)
     set_debug_level(debug)
+
+    bm = BbsManager()
+
     exit(0)
