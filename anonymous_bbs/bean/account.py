@@ -22,7 +22,6 @@ class Account:
         AC_ID_LIST = "ac_id_list"
         INVITER_ID = "inviter_id"
         LOGS = "logs"
-        EXPIRE_DATE = "expire_date"
         CREATE_DATE = "create_date"
         UPDATE_DATE = "update_date"
         IS_BLOCKED = "is_blocked"
