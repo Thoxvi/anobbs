@@ -17,6 +17,7 @@ setup(
         "pyyaml",
         "requests",
         "treelib",
+        "pymongo",
     ],
     entry_points={
         "console_scripts": [f'anobbs=anonymous_bbs.app:cli']

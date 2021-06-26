@@ -4,6 +4,7 @@ __all__ = [
 
 import time
 
+from typing import AnyStr
 from anonymous_bbs.utils.id_utils import get_uuid
 from anonymous_bbs.utils.type_utils import EnumType
 
@@ -26,7 +27,6 @@ class AnoCode:
         return cls(**data)
 
     def __init__(self, **data):
-        super().__init__(**data)
         try:
             self.__owner = data[self.Keys.OWNER]
 
@@ -52,7 +52,7 @@ class AnoCode:
                 return True
         return False
 
-    def set_status(self, status: str) -> bool:
+    def set_status(self, status: AnyStr) -> bool:
         if status not in self.Status.get_list():
             return False
         self.__logs.append((status, time.time()))

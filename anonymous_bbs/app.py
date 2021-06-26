@@ -1,9 +1,10 @@
 import logging
+import random
 
 import click
 
+from anonymous_bbs import AppConstant
 from anonymous_bbs.lib import BbsManager
-from . import AppConstant
 
 logger = logging.getLogger(__name__)
 
@@ -43,4 +44,17 @@ def cli(
 
     bm = BbsManager()
 
+    ra = bm.create_root_account()
+    for _ in range(random.randint(5, 10)):
+        ic = bm.create_ic(ra.id)
+        if random.randint(0, 1) == 0:
+            na = bm.create_account_by_ic(ic.id)
+            for _ in range(random.randint(1, 2)):
+                bm.create_ac(na.id)
+    bm.show()
+
     exit(0)
+
+
+if __name__ == '__main__':
+    cli()

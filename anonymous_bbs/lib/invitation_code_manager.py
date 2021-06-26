@@ -1,29 +1,53 @@
 __all__ = [
     "InvitationCodeManager",
+    "icm",
 ]
 
-from typing import Optional
+from typing import Optional, AnyStr
 
+from anonymous_bbs.base import BaseDbConnect, get_mongo_db_uri
 from anonymous_bbs.bean import InvitationCode
 
 
-class InvitationCodeManager:
-    def __init__(self):
-        self.__unused_ic_id_set = set()
+class InvitationCodeManager(BaseDbConnect):
+    __TABLE_NAME = "invitation_code"
 
-    def is_ic_used(self, ic_id: str) -> bool:
-        return ic_id not in self.__unused_ic_id_set
+    def __init__(self, uri: AnyStr):
+        super().__init__(uri, self.__TABLE_NAME)
 
-    def get_ic(self, ic_id: str) -> Optional[InvitationCode]:
-        # TODO read from db
-        return None
+    def add_ic(self, ic: InvitationCode) -> bool:
+        return self._update(ic.to_dict())
 
-    def use_ic(self, ic_id: str, bid: str) -> bool:
-        # TODO update ic
+    def is_ic_used(self, ic_id: AnyStr) -> bool:
+        return self._count({self.ID_KEY: ic_id, InvitationCode.Keys.IS_USED: True}) > 0
+
+    def get_ic(self, ic_id: AnyStr) -> Optional[InvitationCode]:
+        data = self._query_one({self.ID_KEY: ic_id})
+        return InvitationCode.from_dict(data) if data else None
+
+    def use_ic(self, ic_id: AnyStr, bid: AnyStr) -> bool:
         ic = self.get_ic(ic_id)
         if ic:
             ic.set_used(bid)
-            # TODO write to db
-            return True
+            return self._update(ic.to_dict())
         else:
             return False
+
+    def show(self):
+        print(f"InvitationCode Info:")
+        print(f"\tAll InvitationCode number:\t{self._count()}")
+        print(f"\tUnused InvitationCode number:\t{self._count({InvitationCode.Keys.IS_USED: False})}")
+        print("\n".join([
+            f"\t\t{ic.get(InvitationCode.Keys.ID)}"
+            for ic
+            in self._query({InvitationCode.Keys.IS_USED: False})
+        ]))
+        print(f"\tUsed InvitationCode number:\t{self._count({InvitationCode.Keys.IS_USED: True})}")
+        print("\n".join([
+            f"\t\t{ic.get(InvitationCode.Keys.ID)}"
+            for ic
+            in self._query({InvitationCode.Keys.IS_USED: True})
+        ]))
+
+
+icm = InvitationCodeManager(get_mongo_db_uri())

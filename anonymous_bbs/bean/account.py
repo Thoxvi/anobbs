@@ -3,7 +3,7 @@ __all__ = [
 ]
 
 import time
-from typing import Optional
+from typing import Optional, AnyStr
 
 from anonymous_bbs.utils.id_utils import get_uuid
 from anonymous_bbs.utils.type_utils import EnumType
@@ -26,6 +26,7 @@ class Account:
         UPDATE_DATE = "update_date"
         IS_BLOCKED = "is_blocked"
         IS_DELETED = "is_deleted"
+        IS_ROOT = "is_root"
 
     class Status(EnumType):
         CREATED = "created"
@@ -39,7 +40,6 @@ class Account:
         return cls(**data)
 
     def __init__(self, **data):
-        super().__init__(**data)
         try:
             self.__id = data.get(self.Keys.ID, get_uuid())
             self.__max_ano_size = data.get(self.Keys.MAX_ANO_SIZE, DEFAULT_AC_SIZE)
@@ -51,6 +51,10 @@ class Account:
                 self.__logs.append((self.Status.CREATED, time.time()))
         except (KeyError, ValueError):
             raise RuntimeError(f"Init {self.__class__.__name__} error: {data}")
+
+    @property
+    def id(self) -> AnyStr:
+        return self.__id
 
     @property
     def create_date(self) -> float:
@@ -78,7 +82,11 @@ class Account:
                 return False
         return False
 
-    def set_status(self, status: str) -> bool:
+    @property
+    def is_root(self) -> bool:
+        return self.__inviter is None
+
+    def set_status(self, status: AnyStr) -> bool:
         if status not in self.Status.get_list():
             return False
         self.__logs.append((status, time.time()))
@@ -90,6 +98,7 @@ class Account:
                 AnoCode.Keys.OWNER: self.__id,
             })
             self.__ac_id_list.append(ac.id)
+            return ac
         else:
             return None
 
@@ -110,9 +119,11 @@ class Account:
             self.Keys.AC_ID_LIST: self.__ac_id_list,
             self.Keys.INVITER_ID: self.__inviter,
             self.Keys.LOGS: self.__logs,
+            self.Keys.IC_MARGIN: self.__ic_margin,
 
             self.Keys.CREATE_DATE: self.create_date,
             self.Keys.UPDATE_DATE: self.update_date,
             self.Keys.IS_DELETED: self.is_deleted,
             self.Keys.IS_BLOCKED: self.is_blocked,
+            self.Keys.IS_ROOT: self.is_root,
         }

@@ -3,7 +3,7 @@ __all__ = [
 ]
 
 import time
-from typing import Optional
+from typing import Optional,AnyStr
 
 from anonymous_bbs.utils.id_utils import get_uuid
 from anonymous_bbs.utils.type_utils import EnumType
@@ -27,14 +27,13 @@ class InvitationCode:
     def from_dict(cls, data: dict) -> "InvitationCode":
         return cls(**data)
 
-    def __set_status(self, status: str) -> bool:
+    def __set_status(self, status: AnyStr) -> bool:
         if status not in self.Status.get_list():
             return False
         self.__logs.append((status, time.time()))
         return True
 
     def __init__(self, **data):
-        super().__init__(**data)
         try:
             self.__aid = data[self.Keys.AID]
             self.__bid = data.get(self.Keys.BID)
@@ -47,15 +46,15 @@ class InvitationCode:
             raise RuntimeError(f"Init {self.__class__.__name__} error: {data}")
 
     @property
-    def id(self) -> str:
+    def id(self) -> AnyStr:
         return self.__id
 
     @property
-    def aid(self) -> str:
+    def aid(self) -> AnyStr:
         return self.__aid
 
     @property
-    def bid(self) -> str:
+    def bid(self) -> AnyStr:
         return self.__bid
 
     @property
@@ -76,7 +75,7 @@ class InvitationCode:
                 return True
         return False
 
-    def set_used(self, bid: str):
+    def set_used(self, bid: AnyStr):
         self.__bid = bid
         self.__set_status(self.Status.USED)
 
