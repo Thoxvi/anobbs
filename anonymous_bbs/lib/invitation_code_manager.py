@@ -23,7 +23,7 @@ class InvitationCodeManager(BaseDbConnect):
 
     def get_ic(self, ic_id: AnyStr) -> Optional[InvitationCode]:
         data = self._query_one({self.ID_KEY: ic_id})
-        return InvitationCode.from_dict(data) if data else None
+        return InvitationCode(**data) if data else None
 
     def use_ic(self, ic_id: AnyStr, bid: AnyStr) -> bool:
         ic = self.get_ic(ic_id)

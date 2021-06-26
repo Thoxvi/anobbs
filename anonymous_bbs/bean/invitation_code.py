@@ -3,7 +3,7 @@ __all__ = [
 ]
 
 import time
-from typing import Optional,AnyStr
+from typing import Optional, AnyStr
 
 from anonymous_bbs.utils.id_utils import get_uuid
 from anonymous_bbs.utils.type_utils import EnumType
@@ -22,10 +22,6 @@ class InvitationCode:
     class Status(EnumType):
         CREATED = "created"
         USED = "used"
-
-    @classmethod
-    def from_dict(cls, data: dict) -> "InvitationCode":
-        return cls(**data)
 
     def __set_status(self, status: AnyStr) -> bool:
         if status not in self.Status.get_list():

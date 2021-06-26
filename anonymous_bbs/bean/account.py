@@ -35,10 +35,6 @@ class Account:
         DELETED = "deleted"
         UNDELETED = "undeleted"
 
-    @classmethod
-    def from_dict(cls, data: dict) -> "Account":
-        return cls(**data)
-
     def __init__(self, **data):
         try:
             self.__id = data.get(self.Keys.ID, get_uuid())

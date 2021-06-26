@@ -3,8 +3,8 @@ __all__ = [
 ]
 
 import time
-
 from typing import AnyStr
+
 from anonymous_bbs.utils.id_utils import get_uuid
 from anonymous_bbs.utils.type_utils import EnumType
 
@@ -22,10 +22,6 @@ class AnoCode:
         CREATED = "created"
         BLOCKED = "blocked"
 
-    @classmethod
-    def from_dict(cls, data: dict) -> "AnoCode":
-        return cls(**data)
-
     def __init__(self, **data):
         try:
             self.__owner = data[self.Keys.OWNER]
@@ -38,7 +34,7 @@ class AnoCode:
             raise RuntimeError(f"Init {self.__class__.__name__} error: {data}")
 
     @property
-    def id(self) -> float:
+    def id(self) -> AnyStr:
         return self.__id
 
     @property

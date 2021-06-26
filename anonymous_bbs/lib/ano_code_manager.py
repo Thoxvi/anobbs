@@ -3,10 +3,9 @@ __all__ = [
     "acm",
 ]
 
-from anonymous_bbs.base import BaseDbConnect, get_mongo_db_uri
-
 from typing import Optional, AnyStr
 
+from anonymous_bbs.base import BaseDbConnect, get_mongo_db_uri
 from anonymous_bbs.bean import AnoCode
 
 
@@ -16,12 +15,18 @@ class AnoCodeManager(BaseDbConnect):
     def __init__(self, uri: AnyStr):
         super().__init__(uri, self.__TABLE_NAME)
 
+    def check_ac(self, ac_id: AnyStr) -> bool:
+        return self._count({
+            AnoCode.Keys.ID: ac_id,
+            AnoCode.Keys.IS_BLOCKED: False,
+        }) == 1
+
     def add_ac(self, ac: AnoCode) -> bool:
         return self._update(ac.to_dict())
 
     def get_ac(self, ac_id: AnyStr) -> Optional[AnoCode]:
         data = self._query_one({self.ID_KEY: ac_id})
-        return AnoCode.from_dict(data) if data else None
+        return AnoCode(**data) if data else None
 
     def block_ac(self, ac_id: AnyStr) -> bool:
         ac = self.get_ac(ac_id)

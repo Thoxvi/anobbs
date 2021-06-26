@@ -43,14 +43,20 @@ def cli(
     set_debug_level(debug)
 
     bm = BbsManager()
-
+    last_ac = None
     ra = bm.create_root_account()
     for _ in range(random.randint(5, 10)):
         ic = bm.create_ic(ra.id)
         if random.randint(0, 1) == 0:
             na = bm.create_account_by_ic(ic.id)
             for _ in range(random.randint(1, 2)):
-                bm.create_ac(na.id)
+                last_ac = bm.create_ac(na.id)
+
+    if last_ac:
+        page = bm.post_page(last_ac.id, "HHHHHHHH", "new_group")
+        for i in range(20):
+            bm.append_page(page.id, last_ac.id, f"Floor: {i}")
+
     bm.show()
 
     exit(0)

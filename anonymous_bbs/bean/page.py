@@ -3,12 +3,10 @@ __all__ = [
 ]
 
 import time
+from typing import AnyStr
 
 from anonymous_bbs.utils.id_utils import get_uuid
 from anonymous_bbs.utils.type_utils import EnumType
-
-DEFAULT_AC_SIZE = 5
-DEFAULT_IC_SIZE = 2
 
 
 class Page:
@@ -21,12 +19,7 @@ class Page:
         UPDATE_DATE = "update_date"
         HIDE = "hide"
 
-    @classmethod
-    def from_dict(cls, data: dict) -> "Page":
-        return cls(**data)
-
     def __init__(self, **data):
-        super().__init__(**data)
         try:
             self.__owner_ac = data[self.Keys.OWNER_AC]
             self.__first_floor_id = data[self.Keys.FIRST_FLOOR_ID]
@@ -38,6 +31,10 @@ class Page:
             ])
         except (KeyError, ValueError):
             raise RuntimeError(f"Init {self.__class__.__name__} error: {data}")
+
+    @property
+    def id(self) -> AnyStr:
+        return self.__id
 
     @property
     def create_date(self) -> float:
@@ -59,6 +56,7 @@ class Page:
         return {
             self.Keys.ID: self.__id,
             self.Keys.FLOOR_ID_LIST: self.__floor_id_list,
+            self.Keys.OWNER_AC: self.__owner_ac,
             self.Keys.FIRST_FLOOR_ID: self.__first_floor_id,
             self.Keys.HIDE: self.__hide,
 

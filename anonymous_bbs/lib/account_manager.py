@@ -39,11 +39,11 @@ class AccountManager(BaseDbConnect):
 
     def get_account(self, a_id: AnyStr) -> Optional[Account]:
         data = self._query_one({self.ID_KEY: a_id})
-        return Account.from_dict(data) if data else None
+        return Account(**data) if data else None
 
     def get_all_root_accounts(self) -> List[Account]:
         return [
-            Account.from_dict(data)
+            Account(**data)
             for data
             in self._query({Account.Keys.IS_ROOT: True})
         ]
