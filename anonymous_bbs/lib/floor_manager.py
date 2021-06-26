@@ -32,9 +32,9 @@ class FloorManager(BaseDbConnect):
 
     def show(self):
         print(f"Floor Info:")
-        print(f"\tAll Floor number:\t{self._count()}")
-        print(f"\tNot hidden Floor number:\t{self._count({Floor.Keys.HIDE: False})}")
-        print(f"\tHide Floor number:\t{self._count({Floor.Keys.HIDE: True})}")
+        print(f"\tNumber of all Floor:\t{self._count()}")
+        print(f"\tNumber of Not hidden Floor:\t{self._count({Floor.Keys.HIDE: False})}")
+        print(f"\tNumber of Hide Floor:\t{self._count({Floor.Keys.HIDE: True})}")
 
 
 fm = FloorManager(get_mongo_db_uri())

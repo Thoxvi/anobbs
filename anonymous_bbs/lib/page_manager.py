@@ -50,9 +50,9 @@ class PageManager(BaseDbConnect):
 
     def show(self):
         print(f"Page Info:")
-        print(f"\tAll Page number:\t{self._count()}")
-        print(f"\tNot hidden Page number:\t{self._count({Page.Keys.HIDE: False})}")
-        print(f"\tHide Page number:\t{self._count({Page.Keys.HIDE: True})}")
+        print(f"\tNumber of all Page:\t{self._count()}")
+        print(f"\tNumber of not hidden Page:\t{self._count({Page.Keys.HIDE: False})}")
+        print(f"\tNumber of hide Page:\t{self._count({Page.Keys.HIDE: True})}")
 
 
 pm = PageManager(get_mongo_db_uri())

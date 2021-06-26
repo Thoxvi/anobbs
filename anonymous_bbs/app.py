@@ -57,6 +57,14 @@ def cli(
         for i in range(20):
             bm.append_page(page.id, last_ac.id, f"Floor: {i}")
 
+    old_token = bm.login(ra.id)
+    print(old_token.to_dict())
+    ra_id = bm.get_owner_id_by_token_id(old_token.id)
+    new_token = bm.login(ra_id)
+
+    print(new_token.id)
+    print(bm.get_owner_id_by_token_id(old_token.id))
+
     bm.show()
 
     exit(0)

@@ -39,9 +39,9 @@ class AnoCodeManager(BaseDbConnect):
 
     def show(self):
         print(f"AnoCode Info:")
-        print(f"\tAll AnoCode number:\t{self._count()}")
-        print(f"\tUnblock AnoCode number:\t{self._count({AnoCode.Keys.IS_BLOCKED: False})}")
-        print(f"\tblock AnoCode number:\t{self._count({AnoCode.Keys.IS_BLOCKED: True})}")
+        print(f"\tNumber of all AnoCode:\t{self._count()}")
+        print(f"\tNumber of Unblock AnoCode:\t{self._count({AnoCode.Keys.IS_BLOCKED: False})}")
+        print(f"\tNumber of block AnoCode:\t{self._count({AnoCode.Keys.IS_BLOCKED: True})}")
 
 
 acm = AnoCodeManager(get_mongo_db_uri())

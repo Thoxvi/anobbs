@@ -4,7 +4,7 @@ __all__ = [
 
 from typing import List, Optional, AnyStr
 
-from anonymous_bbs.bean import Account, InvitationCode, AnoCode, Page
+from anonymous_bbs.bean import Account, InvitationCode, AnoCode, Page, Group, Token
 from anonymous_bbs.utils.id_utils import get_uuid
 from .account_manager import am
 from .ano_code_manager import acm
@@ -12,6 +12,7 @@ from .floor_manager import fm
 from .group_manager import gm
 from .invitation_code_manager import icm
 from .page_manager import pm
+from .token_manager import tm
 
 ROOT_MAX_ANO_SIZE = 2 ** 10
 ROOT_IC_MARGIN = 2 ** 10
@@ -25,8 +26,13 @@ class BbsManager:
         self.__pm = pm
         self.__fm = fm
         self.__gm = gm
+        self.__tm = tm
 
-        # TODO add this into config file
+    def login(self, a_id: AnyStr) -> Optional[Token]:
+        return self.__am.login(a_id)
+
+    def get_owner_id_by_token_id(self, tid: AnyStr) -> Optional[AnyStr]:
+        return self.__tm.get_owner_id_by_token_id(tid)
 
     def create_account_by_ic(self, ic_id: AnyStr) -> Optional[Account]:
         if self.__icm.is_ic_used(ic_id):
@@ -84,6 +90,12 @@ class BbsManager:
     def get_all_root_account(self) -> List[Account]:
         return self.__am.get_all_root_accounts()
 
+    def get_all_group(self) -> List[Group]:
+        return self.__gm.get_all_group()
+
+    def get_no_not_hidden(self) -> List[Group]:
+        return self.__gm.get_no_not_hidden()
+
     def show(self):
         self.__icm.show()
         print("---------")
@@ -94,5 +106,7 @@ class BbsManager:
         self.__gm.show()
         print("---------")
         self.__pm.show()
+        print("---------")
+        self.__tm.show()
         print("---------")
         self.__fm.show()

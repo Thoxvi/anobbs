@@ -9,9 +9,10 @@ from typing import Optional
 from treelib import Tree
 
 from anonymous_bbs.base import BaseDbConnect, get_mongo_db_uri
-from anonymous_bbs.bean import Account, InvitationCode, AnoCode
+from anonymous_bbs.bean import Account, InvitationCode, AnoCode, Token
 from .ano_code_manager import acm
 from .invitation_code_manager import icm
+from .token_manager import tm
 
 
 class AccountManager(BaseDbConnect):
@@ -70,13 +71,18 @@ class AccountManager(BaseDbConnect):
             acm.add_ac(ac)
         return ac
 
+    def login(self, a_id: AnyStr) -> Optional[Token]:
+        if self._count({Account.Keys.ID: a_id}) > 0:
+            return tm.create_token(a_id)
+        return None
+
     def show(self):
         print(f"Account Info:")
-        print(f"\tAll account number:\t{self._count()}")
-        print(f"\tRoot account number:\t{self._count({Account.Keys.IS_ROOT: True})}")
-        print(f"\tNormal account number:\t{self._count({Account.Keys.IS_ROOT: False})}")
-        print(f"\tUnblock account number:\t{self._count({Account.Keys.IS_BLOCKED: False})}")
-        print(f"\tblock account number:\t{self._count({Account.Keys.IS_BLOCKED: True})}")
+        print(f"\tNumber of all account:\t{self._count()}")
+        print(f"\tNumber of root account:\t{self._count({Account.Keys.IS_ROOT: True})}")
+        print(f"\tNumber of normal account:\t{self._count({Account.Keys.IS_ROOT: False})}")
+        print(f"\tNumber of unblock account:\t{self._count({Account.Keys.IS_BLOCKED: False})}")
+        print(f"\tNumber of block account:\t{self._count({Account.Keys.IS_BLOCKED: True})}")
         print()
         self.__make_account_tree().show()
 

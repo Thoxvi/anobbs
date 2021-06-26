@@ -3,7 +3,7 @@ __all__ = [
     "gm",
 ]
 
-from typing import Optional, AnyStr
+from typing import Optional, AnyStr, List
 
 from anonymous_bbs.base import BaseDbConnect, get_mongo_db_uri
 from anonymous_bbs.bean import Group
@@ -42,9 +42,23 @@ class GroupManager(BaseDbConnect):
         group.add_page(page_id)
         return self._update(group.to_dict())
 
+    def get_all_group(self) -> List[Group]:
+        return [
+            Group(**group_data)
+            for group_data
+            in self._query()
+        ]
+
+    def get_no_not_hidden(self) -> List[Group]:
+        return [
+            Group(**group_data)
+            for group_data
+            in self._query({Group.Keys.HIDE: False})
+        ]
+
     def show(self):
         print(f"Group Info:")
-        print(f"\tAll Group number:\t{self._count()}")
+        print(f"\tNumber of all Group:\t{self._count()}")
         print(f"Groups:")
         print("\n".join([
             f"\t{group.get(Group.Keys.NAME)}"

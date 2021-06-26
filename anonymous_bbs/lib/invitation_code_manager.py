@@ -35,14 +35,14 @@ class InvitationCodeManager(BaseDbConnect):
 
     def show(self):
         print(f"InvitationCode Info:")
-        print(f"\tAll InvitationCode number:\t{self._count()}")
-        print(f"\tUnused InvitationCode number:\t{self._count({InvitationCode.Keys.IS_USED: False})}")
+        print(f"\tNumber of all InvitationCode:\t{self._count()}")
+        print(f"\tNumber of unused InvitationCode:\t{self._count({InvitationCode.Keys.IS_USED: False})}")
         print("\n".join([
             f"\t\t{ic.get(InvitationCode.Keys.ID)}"
             for ic
             in self._query({InvitationCode.Keys.IS_USED: False})
         ]))
-        print(f"\tUsed InvitationCode number:\t{self._count({InvitationCode.Keys.IS_USED: True})}")
+        print(f"\tNumber of used InvitationCode:\t{self._count({InvitationCode.Keys.IS_USED: True})}")
         print("\n".join([
             f"\t\t{ic.get(InvitationCode.Keys.ID)}"
             for ic
