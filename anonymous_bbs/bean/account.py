@@ -131,3 +131,15 @@ class Account:
             self.Keys.IS_BLOCKED: self.is_blocked,
             self.Keys.IS_ROOT: self.is_root,
         }
+
+    def to_display_dict(self) -> dict:
+        data = self.to_dict()
+        data[self.Keys.ID] = data[self.Keys.ID][:8]
+
+        inviter_id = self.__inviter_id
+        if isinstance(inviter_id, str):
+            data[self.Keys.INVITER_ID] = data[self.Keys.INVITER_ID][:8]
+
+        data.pop(self.Keys.LOGS, [])
+        data.pop(self.Keys.IS_ROOT, False)
+        return data

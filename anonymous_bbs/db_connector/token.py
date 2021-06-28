@@ -35,7 +35,7 @@ class TokenDbConnector(BaseDbConnect):
         else:
             return None
 
-    def get_owner_id_by_token_id(self, tid: AnyStr) -> Optional[AnyStr]:
+    def get_account_id_by_token_id(self, tid: AnyStr) -> Optional[AnyStr]:
         token = self.query_one({Token.Keys.ID: tid})
         if token:
             token = Token(**token)

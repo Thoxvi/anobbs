@@ -49,16 +49,17 @@ def cli(
     token = bm.login(bm.get_admin_account().id)
     admin = bm.get_account_by_token(token.id)
     if not admin.ac_id_list:
-        ac_id = bm.create_ano_code(admin.id).id
+        ac_id = bm.create_ano_code_by_token(token.id).id
     else:
         ac_id = admin.ac_id_list[0]
-    page = bm.post_page(ac_id, f"Good day! Now time: {time.time()}")
+    page = bm.post_page(token.id, ac_id, f"Good day! Now time: {time.time()}")
     for i in range(32):
-        page = bm.append_page(page.id, ac_id, f"Yes, {i} times")
+        page = bm.append_page(page.id, token.id, ac_id, f"Yes, {i} times")
 
     print(json.dumps(bm.get_page_with_floors(page.id, 10, 1), indent=2))
     print(json.dumps(bm.get_page_with_floors(page.id, 10, 2), indent=2))
     print(json.dumps(bm.get_group_with_pages("all", 1000, 1), indent=2))
+    print(json.dumps(bm.get_display_account_by_token(token.id), indent=2))
     bm.show()
 
     exit(0)
