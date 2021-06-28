@@ -138,7 +138,7 @@ class Account:
 
         inviter_id = self.__inviter_id
         if isinstance(inviter_id, str):
-            data[self.Keys.INVITER_ID] = data[self.Keys.INVITER_ID][:8]
+            data[self.Keys.INVITER_ID] = inviter_id[:8]
 
         data.pop(self.Keys.LOGS, [])
         data.pop(self.Keys.IS_ROOT, False)

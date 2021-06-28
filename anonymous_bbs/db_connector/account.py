@@ -73,6 +73,11 @@ class AccountDbConnector(BaseDbConnect):
             })
             if ac_data
         ]
+        data["ic_list"] = [
+            InvitationCode(**ic_data).to_display_dict()
+            for ic_data
+            in invitation_code_db_connector.query({InvitationCode.Keys.AID: a_id})
+        ]
         return data
 
     def create_ic(self, a_id: AnyStr) -> Optional[InvitationCode]:

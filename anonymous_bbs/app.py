@@ -48,6 +48,7 @@ def cli(
 
     token = bm.login(bm.get_admin_account().id)
     admin = bm.get_account_by_token(token.id)
+    ic = bm.create_invitation_code_by_token(token.id)
     if not admin.ac_id_list:
         ac_id = bm.create_ano_code_by_token(token.id).id
     else:

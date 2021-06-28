@@ -86,3 +86,12 @@ class InvitationCode:
             self.Keys.USED_DATE: self.used_date,
             self.Keys.IS_USED: self.is_used,
         }
+
+    def to_display_dict(self) -> dict:
+        data = self.to_dict()
+        data[self.Keys.AID] = data[self.Keys.AID][:8]
+        bid = data.get(self.Keys.BID)
+        if bid:
+            data[self.Keys.BID] = bid[:8]
+        data.pop(self.Keys.LOGS, None)
+        return data
