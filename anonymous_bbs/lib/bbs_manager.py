@@ -233,15 +233,18 @@ class BbsManager:
 
     @staticmethod
     def get_display_account_by_account(account_id: AnyStr) -> Optional[dict]:
-        account = account_db_connector.get_account(account_id)
-        if account:
-            return account.to_display_dict()
-        return None
+        return account_db_connector.get_display_dict(account_id)
 
     @staticmethod
     def get_display_account_by_token(token_id: AnyStr) -> Optional[dict]:
-        account = BbsManager.get_account_by_token(token_id)
-        return account.to_display_dict()
+        account_id = BbsManager.get_account_id_by_token(token_id)
+        if account_id:
+            return account_db_connector.get_display_dict(account_id)
+        return None
+
+    # @staticmethod
+    # def block_ano_code_by_floor_no(floor_no: AnyStr):
+    #     floor_no.
 
     @staticmethod
     def show():

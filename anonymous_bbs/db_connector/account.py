@@ -55,6 +55,26 @@ class AccountDbConnector(BaseDbConnect):
             ac = Account(**ac)
         return ac
 
+    def get_display_dict(self, a_id: AnyStr) -> Optional[dict]:
+        account = self.get_account(a_id)
+        if not account:
+            return None
+        data = account.to_display_dict()
+        data["ac_list"] = [
+            AnoCode(**ac_data).to_display_dict()
+            for ac_data
+            in ano_code_db_connector.query({"$or": [
+                {
+                    AnoCode.Keys.ID: ac_id
+                }
+                for ac_id
+                in data.pop(Account.Keys.AC_ID_LIST, [])
+            ]
+            })
+            if ac_data
+        ]
+        return data
+
     def create_ic(self, a_id: AnyStr) -> Optional[InvitationCode]:
         account = self.get_account(a_id)
         if not account:

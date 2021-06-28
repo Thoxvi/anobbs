@@ -67,3 +67,9 @@ class AnoCode:
             self.Keys.CREATE_DATE: self.create_date,
             self.Keys.IS_BLOCKED: self.is_blocked,
         }
+
+    def to_display_dict(self) -> dict:
+        data = self.to_dict()
+        data.pop(self.Keys.OWNER, "")
+        data.pop(self.Keys.LOGS, [])
+        return data
