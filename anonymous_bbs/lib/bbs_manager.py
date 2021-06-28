@@ -5,7 +5,7 @@ __all__ = [
 import logging
 from typing import List, Optional, AnyStr
 
-from anonymous_bbs.bean import Account, InvitationCode, AnoCode, Page, Group, Token
+from anonymous_bbs.bean import Account, InvitationCode, AnoCode, Page, Group, Token, Floor
 from anonymous_bbs.db_connector import (
     account_db_connector,
     ano_code_db_connector,
@@ -33,6 +33,12 @@ class BbsManager:
             return False
         else:
             logger.info(f"Admin ID: {admin.id}")
+
+    @staticmethod
+    def __check_token_is_admin(token_id: AnyStr) -> bool:
+        account_id = BbsManager.get_account_id_by_token(token_id)
+        admin = BbsManager.get_admin_account()
+        return admin and account_id and admin.id == account_id
 
     @staticmethod
     def __check_ano_code_use_token(ano_code_id: AnyStr, token_id: AnyStr) -> bool:
@@ -242,9 +248,21 @@ class BbsManager:
             return account_db_connector.get_display_dict(account_id)
         return None
 
-    # @staticmethod
-    # def block_ano_code_by_floor_no(floor_no: AnyStr):
-    #     floor_no.
+    @staticmethod
+    def block_ano_code_by_floor_no(token_id: AnyStr, floor_no: AnyStr) -> bool:
+        if not BbsManager.__check_token_is_admin(token_id):
+            return False
+        floor = floor_db_connector.query_one({Floor.Keys.NO: floor_no})
+        if not floor:
+            return False
+        floor = Floor(**floor)
+        return ano_code_db_connector.block_ac(floor.owner_ac)
+
+    @staticmethod
+    def block_ano_code(token_id: AnyStr, ano_code: AnyStr) -> bool:
+        if not BbsManager.__check_token_is_admin(token_id):
+            return False
+        return ano_code_db_connector.block_ac(ano_code.owner_ac)
 
     @staticmethod
     def show():
