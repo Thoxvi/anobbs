@@ -1,6 +1,6 @@
 __all__ = [
-    "AccountManager",
-    "am",
+    "AccountDbConnector",
+    "account_db_connector",
 ]
 
 from typing import AnyStr, List
@@ -10,12 +10,12 @@ from treelib import Tree
 
 from anonymous_bbs.base import BaseDbConnect, get_mongo_db_uri
 from anonymous_bbs.bean import Account, InvitationCode, AnoCode, Token
-from .ano_code_manager import acm
-from .invitation_code_manager import icm
-from .token_manager import tm
+from anonymous_bbs.db_connector.ano_code import ano_code_db_connector
+from anonymous_bbs.db_connector.invitation_code import invitation_code_db_connector
+from anonymous_bbs.db_connector.token import token_db_connector
 
 
-class AccountManager(BaseDbConnect):
+class AccountDbConnector(BaseDbConnect):
     __TABLE_NAME = "account"
 
     def __make_account_tree(self) -> Tree:
@@ -39,7 +39,7 @@ class AccountManager(BaseDbConnect):
         return self._update(account.to_dict())
 
     def get_account(self, a_id: AnyStr) -> Optional[Account]:
-        data = self._query_one({self._key_id: a_id})
+        data = self._query_one({self._id_key: a_id})
         return Account(**data) if data else None
 
     def get_all_root_accounts(self) -> List[Account]:
@@ -63,7 +63,7 @@ class AccountManager(BaseDbConnect):
         ic = account.create_ic()
         if ic:
             self._update(account.to_dict())
-            icm.add_ic(ic)
+            invitation_code_db_connector.add_ic(ic)
         return ic
 
     def create_ac(self, a_id: AnyStr) -> Optional[AnoCode]:
@@ -74,12 +74,12 @@ class AccountManager(BaseDbConnect):
         ac = account.create_ac()
         if ac:
             self._update(account.to_dict())
-            acm.add_ac(ac)
+            ano_code_db_connector.add_ac(ac)
         return ac
 
     def login(self, a_id: AnyStr) -> Optional[Token]:
         if self._count({Account.Keys.ID: a_id}) > 0:
-            return tm.create_token(a_id)
+            return token_db_connector.create_token(a_id)
         return None
 
     def show(self):
@@ -93,4 +93,4 @@ class AccountManager(BaseDbConnect):
         self.__make_account_tree().show()
 
 
-am = AccountManager(get_mongo_db_uri())
+account_db_connector = AccountDbConnector(get_mongo_db_uri())

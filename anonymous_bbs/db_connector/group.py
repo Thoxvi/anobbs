@@ -1,17 +1,17 @@
 __all__ = [
-    "GroupManager",
-    "gm",
+    "GroupDbConnector",
+    "group_db_connector",
 ]
 
 from typing import Optional, AnyStr, List
 
 from anonymous_bbs.base import BaseDbConnect, get_mongo_db_uri
 from anonymous_bbs.bean import Group, Page, Floor
-from .floor_manager import fm
-from .page_manager import pm
+from .floor import floor_db_connector
+from .page import page_db_connector
 
 
-class GroupManager(BaseDbConnect):
+class GroupDbConnector(BaseDbConnect):
     __TABLE_NAME = "group"
     DEFAULT_ALL = "all"
 
@@ -90,7 +90,7 @@ class GroupManager(BaseDbConnect):
         page_list = [
             Page(**page_data)
             for page_data
-            in pm.query({"$or": [
+            in page_db_connector.query({"$or": [
                 {
                     Page.Keys.ID: pid,
                     Page.Keys.HIDE: False
@@ -102,7 +102,7 @@ class GroupManager(BaseDbConnect):
         first_floor_list = [
             Floor(**floor)
             for floor
-            in fm.query({"$or": [
+            in floor_db_connector.query({"$or": [
                 {
                     Floor.Keys.ID: page.first_floor_id,
                     Floor.Keys.HIDE: False
@@ -133,4 +133,4 @@ class GroupManager(BaseDbConnect):
         ]))
 
 
-gm = GroupManager(get_mongo_db_uri())
+group_db_connector = GroupDbConnector(get_mongo_db_uri())

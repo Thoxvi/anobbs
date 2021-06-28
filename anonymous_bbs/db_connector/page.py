@@ -1,16 +1,16 @@
 __all__ = [
-    "PageManager",
-    "pm",
+    "PageDbConnector",
+    "page_db_connector",
 ]
 
 from typing import Optional, AnyStr, List
 
 from anonymous_bbs.base import BaseDbConnect, get_mongo_db_uri
 from anonymous_bbs.bean import Page, Floor
-from .floor_manager import fm
+from .floor import floor_db_connector
 
 
-class PageManager(BaseDbConnect):
+class PageDbConnector(BaseDbConnect):
     __TABLE_NAME = "page"
 
     def __init__(self, uri: AnyStr):
@@ -41,7 +41,7 @@ class PageManager(BaseDbConnect):
         return [
             Floor(**floor)
             for floor
-            in fm.query({"$or": [
+            in floor_db_connector.query({"$or": [
                 {
                     Floor.Keys.ID: fid,
                 }
@@ -55,7 +55,7 @@ class PageManager(BaseDbConnect):
             ac_id: AnyStr,
             content: AnyStr,
     ) -> Optional[Page]:
-        floor = fm.create_floor(ac_id, content)
+        floor = floor_db_connector.create_floor(ac_id, content)
         if floor:
             page = Page(**{
                 Page.Keys.OWNER_AC: ac_id,
@@ -74,7 +74,7 @@ class PageManager(BaseDbConnect):
         page = self.query_one({Page.Keys.ID: pid})
         if page:
             page = Page(**page)
-            new_floor = fm.create_floor(ac_id, content)
+            new_floor = floor_db_connector.create_floor(ac_id, content)
             if new_floor:
                 page.add_floor(new_floor.id)
                 if self._update(page.to_dict()):
@@ -89,4 +89,4 @@ class PageManager(BaseDbConnect):
         print(f"\tNumber of hide Page:\t{self._count({Page.Keys.HIDE: True})}")
 
 
-pm = PageManager(get_mongo_db_uri())
+page_db_connector = PageDbConnector(get_mongo_db_uri())

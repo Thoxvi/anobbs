@@ -103,7 +103,7 @@ class BaseDb(object):
         return sha256.hexdigest()
 
     def _check_exists(self, data_id: AnyStr) -> bool:
-        return BaseDb._get_collection(self).count_documents({self._key_id: data_id}) > 0
+        return BaseDb._get_collection(self).count_documents({self._id_key: data_id}) > 0
 
     def _insert(self, data: dict) -> bool:
         if data is None:
@@ -113,9 +113,9 @@ class BaseDb(object):
     def _update(self, data: dict) -> bool:
         try:
             data = copy.deepcopy(data)
-            data_id = data[self._key_id]
-            if BaseDb._get_collection(self).find({self._key_id: data_id}).count() > 0:
-                BaseDb._get_collection(self).update_one({self._key_id: data_id}, {"$set": data})
+            data_id = data[self._id_key]
+            if BaseDb._get_collection(self).find({self._id_key: data_id}).count() > 0:
+                BaseDb._get_collection(self).update_one({self._id_key: data_id}, {"$set": data})
             else:
                 return self._insert(data)
             return True
@@ -131,7 +131,7 @@ class BaseDb(object):
         return BaseDb._get_collection(self).drop_index(name)
 
     def _delete(self, data_id: AnyStr) -> bool:
-        return BaseDb._get_collection(self).delete_one({self._key_id: data_id}).deleted_count == 1
+        return BaseDb._get_collection(self).delete_one({self._id_key: data_id}).deleted_count == 1
 
     def _count(
             self,
@@ -152,10 +152,10 @@ class BaseDb(object):
         for obj in objects:
             if not isinstance(obj, dict):
                 continue
-            oid = obj.get(self._key_id)
+            oid = obj.get(self._id_key)
             if oid is None:
                 continue
-            operation_list.append(pymongo.UpdateOne({self._key_id: oid}, {"$set": obj}))
+            operation_list.append(pymongo.UpdateOne({self._id_key: oid}, {"$set": obj}))
 
         return BaseDb._get_collection(self).bulk_write(operation_list).acknowledged
 
@@ -212,11 +212,16 @@ class BaseDb(object):
     def _remove_all(self) -> None:
         BaseDb._get_collection(self).drop()
 
-    def __init__(self, uri: AnyStr, table_name: AnyStr, key_id: AnyStr = __ID_KEY):
+    def __init__(
+            self,
+            uri: AnyStr,
+            table_name: AnyStr,
+            id_key: AnyStr = __ID_KEY,
+    ):
         self._db_uri = uri
         self._db_client = None
         self._table_name = table_name
-        self._key_id = key_id
+        self._id_key = id_key
 
     def init_db_client(self) -> bool:
         try:
@@ -234,8 +239,13 @@ class BaseDbConnect(BaseDb):
     __DOC_NAME = "error"
     __ID_KEY = "id"
 
-    def __init__(self, uri: AnyStr, doc_name: AnyStr = __DOC_NAME, key_id: AnyStr = __ID_KEY):
-        super().__init__(uri, doc_name, key_id)
+    def __init__(
+            self,
+            uri: AnyStr,
+            doc_name: AnyStr = __DOC_NAME,
+            id_key: AnyStr = __ID_KEY,
+    ):
+        super().__init__(uri, doc_name, id_key)
 
     def check_exists_by_id(self, data_id: AnyStr) -> bool:
         return self._check_exists(data_id)

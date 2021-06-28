@@ -6,14 +6,16 @@ import logging
 from typing import List, Optional, AnyStr
 
 from anonymous_bbs.bean import Account, InvitationCode, AnoCode, Page, Group, Token
+from anonymous_bbs.db_connector import (
+    account_db_connector,
+    ano_code_db_connector,
+    floor_db_connector,
+    group_db_connector,
+    invitation_code_db_connector,
+    page_db_connector,
+    token_db_connector,
+)
 from anonymous_bbs.utils.id_utils import get_uuid
-from .account_manager import am
-from .ano_code_manager import acm
-from .floor_manager import fm
-from .group_manager import gm
-from .invitation_code_manager import icm
-from .page_manager import pm
-from .token_manager import tm
 
 ROOT_MAX_ANO_SIZE = 2 ** 10
 ROOT_IC_MARGIN = 2 ** 10
@@ -33,26 +35,26 @@ class BbsManager:
 
     @staticmethod
     def login(a_id: AnyStr) -> Optional[Token]:
-        return am.login(a_id)
+        return account_db_connector.login(a_id)
 
     @staticmethod
     def get_owner_id_by_token_id(tid: AnyStr) -> Optional[AnyStr]:
-        return tm.get_owner_id_by_token_id(tid)
+        return token_db_connector.get_owner_id_by_token_id(tid)
 
     @staticmethod
     def create_account_by_ic(ic_id: AnyStr) -> Optional[Account]:
-        if icm.is_ic_used(ic_id):
+        if invitation_code_db_connector.is_ic_used(ic_id):
             return None
 
         bid = get_uuid()
-        if not icm.use_ic(ic_id, bid):
+        if not invitation_code_db_connector.use_ic(ic_id, bid):
             return None
 
         account = Account(**{
             Account.Keys.ID: bid,
-            Account.Keys.INVITER_ID: icm.get_ic(ic_id).aid,
+            Account.Keys.INVITER_ID: invitation_code_db_connector.get_ic(ic_id).aid,
         })
-        if am.add_account(account):
+        if account_db_connector.add_account(account):
             logger.info(
                 f"InvitationCode used:"
                 f"\tIC: {ic_id}"
@@ -69,7 +71,7 @@ class BbsManager:
             Account.Keys.MAX_ANO_SIZE: ROOT_MAX_ANO_SIZE,
             Account.Keys.IC_MARGIN: ROOT_IC_MARGIN,
         })
-        if am.add_account(account):
+        if account_db_connector.add_account(account):
             logger.info(
                 f"Root Account created:"
                 f"\tID: {account.id}"
@@ -80,7 +82,7 @@ class BbsManager:
 
     @staticmethod
     def create_invitation_code(a_id: AnyStr) -> Optional[InvitationCode]:
-        ic = am.create_ic(a_id)
+        ic = account_db_connector.create_ic(a_id)
         if ic:
             logger.info(
                 f"InvitationCode Created"
@@ -91,7 +93,7 @@ class BbsManager:
 
     @staticmethod
     def create_ano_code(a_id: AnyStr) -> Optional[AnoCode]:
-        ac = am.create_ac(a_id)
+        ac = account_db_connector.create_ac(a_id)
         if ac:
             logger.info(
                 f"AnoCode Created:"
@@ -104,13 +106,13 @@ class BbsManager:
     def post_page(
             ac_id: AnyStr,
             content: AnyStr,
-            group_name: AnyStr = gm.DEFAULT_ALL
+            group_name: AnyStr = group_db_connector.DEFAULT_ALL
     ) -> Optional[Page]:
-        if not acm.check_ac(ac_id):
+        if not ano_code_db_connector.check_ac(ac_id):
             return None
-        page = pm.create_page(ac_id, content)
+        page = page_db_connector.create_page(ac_id, content)
         if page:
-            if gm.post_page_into_group(page.id, group_name):
+            if group_db_connector.post_page_into_group(page.id, group_name):
                 logger.info(
                     f"Page Created:"
                     f"\tAnoCode: {page.owner_ac}"
@@ -127,7 +129,7 @@ class BbsManager:
             ac_id: AnyStr,
             content: AnyStr,
     ) -> Optional[Page]:
-        page = pm.append_content(page_id, ac_id, content)
+        page = page_db_connector.append_content(page_id, ac_id, content)
         if page:
             logger.info(
                 f"Page Appended:"
@@ -139,27 +141,27 @@ class BbsManager:
 
     @staticmethod
     def get_all_root_account() -> List[Account]:
-        return am.get_all_root_accounts()
+        return account_db_connector.get_all_root_accounts()
 
     def get_admin_account(self) -> Optional[Account]:
-        admin = am.get_first_root_account()
+        admin = account_db_connector.get_first_root_account()
         if not admin:
             admin = self.create_root_account()
         return admin
 
     @staticmethod
     def get_all_group() -> List[Group]:
-        return gm.get_all_group()
+        return group_db_connector.get_all_group()
 
     @staticmethod
     def get_no_not_hidden() -> List[Group]:
-        return gm.get_no_not_hidden()
+        return group_db_connector.get_no_not_hidden()
 
     @staticmethod
     def get_account_by_token(token_id: AnyStr) -> Optional[Account]:
-        a_id = tm.get_owner_id_by_token_id(token_id)
+        a_id = token_db_connector.get_owner_id_by_token_id(token_id)
         if a_id:
-            return am.get_account(a_id)
+            return account_db_connector.get_account(a_id)
         return None
 
     @staticmethod
@@ -168,7 +170,7 @@ class BbsManager:
             page_size: int = 50,
             page_index: int = 1,
     ) -> Optional[dict]:
-        page = pm.get_page(page_id)
+        page = page_db_connector.get_page(page_id)
         if not page:
             return None
         if page.hide:
@@ -179,7 +181,7 @@ class BbsManager:
             return None
         page_data["floors_count"] = len(page_data.pop(Page.Keys.FLOOR_ID_LIST, []))
 
-        floors = pm.get_floors(page_id, page_size, page_index)
+        floors = page_db_connector.get_floors(page_id, page_size, page_index)
         page_data["floors"] = [
             floor.to_display_dict()
             for floor
@@ -194,28 +196,28 @@ class BbsManager:
             page_size: int = 50,
             page_index: int = 1,
     ) -> Optional[dict]:
-        group = gm.get_group_by_name(group_name)
+        group = group_db_connector.get_group_by_name(group_name)
         if not group:
             return None
         group_data = group.to_display_dict()
         if not group_data:
             return None
         group_data["pages_count"] = len(group_data.pop(Group.Keys.PAGE_ID_LIST, []))
-        group_data["pages"] = gm.get_pages(group_name, page_size, page_index)
+        group_data["pages"] = group_db_connector.get_pages(group_name, page_size, page_index)
         return group_data
 
     @staticmethod
     def show():
-        icm.show()
+        invitation_code_db_connector.show()
         print("---------")
-        am.show()
+        account_db_connector.show()
         print("---------")
-        acm.show()
+        ano_code_db_connector.show()
         print("---------")
-        gm.show()
+        group_db_connector.show()
         print("---------")
-        pm.show()
+        page_db_connector.show()
         print("---------")
-        tm.show()
+        token_db_connector.show()
         print("---------")
-        fm.show()
+        floor_db_connector.show()

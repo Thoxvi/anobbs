@@ -1,6 +1,6 @@
 __all__ = [
-    "TokenManager",
-    "tm",
+    "TokenDbConnector",
+    "token_db_connector",
 ]
 
 import time
@@ -12,7 +12,7 @@ from anonymous_bbs.bean import Token
 DEFAULT_EXPIRE_TIME = 60 * 60 * 48
 
 
-class TokenManager(BaseDbConnect):
+class TokenDbConnector(BaseDbConnect):
     __TABLE_NAME = "token"
 
     def __init__(self, uri: AnyStr):
@@ -52,4 +52,4 @@ class TokenManager(BaseDbConnect):
         print(f"\tNumber of unexpired Token:\t{self._count({Token.Keys.IS_EXPIRED: False})}")
 
 
-tm = TokenManager(get_mongo_db_uri())
+token_db_connector = TokenDbConnector(get_mongo_db_uri())

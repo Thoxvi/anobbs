@@ -1,6 +1,6 @@
 __all__ = [
-    "InvitationCodeManager",
-    "icm",
+    "InvitationCodeDbConnector",
+    "invitation_code_db_connector",
 ]
 
 from typing import Optional, AnyStr
@@ -9,7 +9,7 @@ from anonymous_bbs.base import BaseDbConnect, get_mongo_db_uri
 from anonymous_bbs.bean import InvitationCode
 
 
-class InvitationCodeManager(BaseDbConnect):
+class InvitationCodeDbConnector(BaseDbConnect):
     __TABLE_NAME = "invitation_code"
 
     def __init__(self, uri: AnyStr):
@@ -19,10 +19,10 @@ class InvitationCodeManager(BaseDbConnect):
         return self._update(ic.to_dict())
 
     def is_ic_used(self, ic_id: AnyStr) -> bool:
-        return self._count({self._key_id: ic_id, InvitationCode.Keys.IS_USED: True}) > 0
+        return self._count({self._id_key: ic_id, InvitationCode.Keys.IS_USED: True}) > 0
 
     def get_ic(self, ic_id: AnyStr) -> Optional[InvitationCode]:
-        data = self._query_one({self._key_id: ic_id})
+        data = self._query_one({self._id_key: ic_id})
         return InvitationCode(**data) if data else None
 
     def use_ic(self, ic_id: AnyStr, bid: AnyStr) -> bool:
@@ -50,4 +50,4 @@ class InvitationCodeManager(BaseDbConnect):
         ]))
 
 
-icm = InvitationCodeManager(get_mongo_db_uri())
+invitation_code_db_connector = InvitationCodeDbConnector(get_mongo_db_uri())

@@ -12,6 +12,7 @@ from anonymous_bbs.utils.type_utils import EnumType
 class Floor:
     class Keys(EnumType):
         ID = "id"
+        NO = "no"
         OWNER_AC = "owner_ac"
         CONTENT = "content"
         CREATE_DATE = "create_date"
@@ -23,6 +24,7 @@ class Floor:
             self.__content = data[self.Keys.CONTENT]
 
             self.__id = data.get(self.Keys.ID, get_uuid())
+            self.__no = data.get(self.Keys.NO, "")
             self.__hide = data.get(self.Keys.HIDE, False)
             self.__create_date = data.get(self.Keys.CREATE_DATE, time.time())
         except (KeyError, ValueError):
@@ -55,6 +57,7 @@ class Floor:
             self.Keys.CONTENT: self.__content,
             self.Keys.HIDE: self.__hide,
             self.Keys.CREATE_DATE: self.__create_date,
+            self.Keys.NO: self.__no,
         }
 
     def to_display_dict(self) -> Optional[dict]:
