@@ -2,6 +2,7 @@ __all__ = [
     "Page",
 ]
 
+import time
 from typing import AnyStr, List, Optional
 
 from anonymous_bbs.utils.id_utils import get_uuid
@@ -26,12 +27,18 @@ class Page:
             self.__id = data.get(self.Keys.ID, get_uuid())
             self.__hide = data.get(self.Keys.HIDE, False)
             self.__floor_id_list = data.get(self.Keys.FLOOR_ID_LIST, [self.__first_floor_id])
+            self.__create_date = data.get(self.Keys.CREATE_DATE, time.time())
+            self.__update_date = data.get(self.Keys.UPDATE_DATE, time.time())
         except (KeyError, ValueError):
             raise RuntimeError(f"Init {self.__class__.__name__} error: {data}")
 
     @property
     def id(self) -> AnyStr:
         return self.__id
+
+    @property
+    def first_floor_id(self) -> AnyStr:
+        return self.__first_floor_id
 
     @property
     def floor_id_list(self) -> List[AnyStr]:
@@ -43,17 +50,18 @@ class Page:
 
     @property
     def create_date(self) -> float:
-        return self.__floor_id_list[0]
+        return self.__create_date
 
     @property
     def update_date(self) -> float:
-        return self.__floor_id_list[-1]
+        return self.__update_date
 
     @property
     def hide(self) -> bool:
         return self.__hide
 
     def add_floor(self, fid: str) -> bool:
+        self.__update_date = time.time()
         self.__floor_id_list.append(fid)
         return True
 

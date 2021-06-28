@@ -173,12 +173,12 @@ class BbsManager:
         if page.hide:
             return None
 
-        floors = self.__pm.get_floors(page_id, page_size, page_index)
-
         page_data = page.to_display_dict()
         if not page_data:
             return None
-        page_data.pop(Page.Keys.FLOOR_ID_LIST, [])
+        page_data["floors_count"] = len(page_data.pop(Page.Keys.FLOOR_ID_LIST, []))
+
+        floors = self.__pm.get_floors(page_id, page_size, page_index)
         page_data["floors"] = [
             floor.to_display_dict()
             for floor
@@ -186,6 +186,22 @@ class BbsManager:
             if not floor.hide
         ]
         return page_data
+
+    def get_group_with_pages(
+            self,
+            group_name: AnyStr,
+            page_size: int = 50,
+            page_index: int = 1,
+    ) -> Optional[dict]:
+        group = self.__gm.get_group_by_name(group_name)
+        if not group:
+            return None
+        group_data = group.to_display_dict()
+        if not group_data:
+            return None
+        group_data["pages_count"] = len(group_data.pop(Group.Keys.PAGE_ID_LIST, []))
+        group_data["pages"] = self.__gm.get_pages(group_name, page_size, page_index)
+        return group_data
 
     def show(self):
         self.__icm.show()

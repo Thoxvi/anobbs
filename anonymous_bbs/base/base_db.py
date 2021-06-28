@@ -59,7 +59,7 @@ def check_db_connect(func):
 
 
 class BaseDb(object):
-    __DB_DATABASE_NAME = "ano_bbs"
+    __DB_DATABASE_NAME = "AnoBBS"
     __DB_PASSWORD_SALT = "V8OMDhoURNYHCiJZLE13DgQQesrLsuQ3"
     __INSTANCE = None
     __ID_KEY = "id"

@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 
 import click
 
@@ -51,12 +52,13 @@ def cli(
         ac_id = bm.create_ano_code(admin.id).id
     else:
         ac_id = admin.ac_id_list[0]
-    page = bm.post_page(ac_id, "Good day!")
+    page = bm.post_page(ac_id, f"Good day! Now time: {time.time()}")
     for i in range(32):
         page = bm.append_page(page.id, ac_id, f"Yes, {i} times")
 
-    print(json.dumps(bm.get_page_with_floors(page.id, 1000, 1), indent=2))
-
+    print(json.dumps(bm.get_page_with_floors(page.id, 10, 1), indent=2))
+    print(json.dumps(bm.get_page_with_floors(page.id, 10, 2), indent=2))
+    print(json.dumps(bm.get_group_with_pages("all", 1000, 1), indent=2))
     bm.show()
 
     exit(0)
