@@ -22,6 +22,7 @@ class TokenManager(BaseDbConnect):
         old_token_list = []
         for old_token in self._query({Token.Keys.OWNED_ACCOUNT_ID: a_id}):
             old_token[Token.Keys.EXPIRE_DATE] = 0
+            old_token[Token.Keys.IS_EXPIRED] = True
             old_token_list.append(old_token)
         self.update_many(old_token_list)
 

@@ -63,5 +63,5 @@ class Floor:
 
         data = self.to_dict()
         data.pop(self.Keys.HIDE, False)
-        data[self.Keys.OWNER_AC] = data[self.Keys.ID][:8]
+        data[self.Keys.OWNER_AC] = data[self.Keys.OWNER_AC][:8]
         return data
