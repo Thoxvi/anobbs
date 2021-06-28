@@ -38,6 +38,10 @@ class AnoCode:
         return self.__id
 
     @property
+    def owner(self) -> AnyStr:
+        return self.__owner
+
+    @property
     def create_date(self) -> float:
         return self.__logs[0][1]
 

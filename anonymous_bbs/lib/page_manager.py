@@ -3,10 +3,10 @@ __all__ = [
     "pm",
 ]
 
-from typing import Optional, AnyStr
+from typing import Optional, AnyStr, List
 
 from anonymous_bbs.base import BaseDbConnect, get_mongo_db_uri
-from anonymous_bbs.bean import Page
+from anonymous_bbs.bean import Page, Floor
 from .floor_manager import fm
 
 
@@ -15,6 +15,40 @@ class PageManager(BaseDbConnect):
 
     def __init__(self, uri: AnyStr):
         super().__init__(uri, self.__TABLE_NAME)
+
+    def get_page(self, pid: AnyStr) -> Optional[Page]:
+        page = self._query_one({Page.Keys.ID: pid})
+        if page:
+            page = Page(**page)
+        return page
+
+    def get_floors(
+            self, pid: AnyStr,
+            page_size: int = 50,
+            page_index: int = 1,
+    ) -> List[Floor]:
+        page = self.get_page(pid)
+        if not page:
+            return []
+
+        if page_size <= 0 or page_index < 1:
+            return []
+
+        page_index -= 1
+        floor_ids = page.floor_id_list[page_size * page_index:
+                                       page_size * (page_index + 1)]
+
+        return [
+            Floor(**floor)
+            for floor
+            in fm.query({"$or": [
+                {
+                    Floor.Keys.ID: fid,
+                }
+                for fid
+                in floor_ids
+            ]})
+        ]
 
     def create_page(
             self,

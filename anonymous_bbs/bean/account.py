@@ -40,7 +40,7 @@ class Account:
             self.__id = data.get(self.Keys.ID, get_uuid())
             self.__max_ano_size = data.get(self.Keys.MAX_ANO_SIZE, DEFAULT_AC_SIZE)
             self.__ac_id_list = data.get(self.Keys.AC_ID_LIST, [])
-            self.__inviter = data.get(self.Keys.INVITER_ID)
+            self.__inviter_id = data.get(self.Keys.INVITER_ID)
             self.__ic_margin = data.get(self.Keys.IC_MARGIN, DEFAULT_IC_SIZE)
             self.__logs = data.get(self.Keys.LOGS, [])
             if len(self.__logs) == 0:
@@ -51,6 +51,14 @@ class Account:
     @property
     def id(self) -> AnyStr:
         return self.__id
+
+    @property
+    def inviter_id(self) -> AnyStr:
+        return self.__inviter_id
+
+    @property
+    def ac_id_list(self) -> AnyStr:
+        return self.__ac_id_list[:]
 
     @property
     def create_date(self) -> float:
@@ -80,7 +88,7 @@ class Account:
 
     @property
     def is_root(self) -> bool:
-        return self.__inviter is None
+        return self.__inviter_id is None
 
     def set_status(self, status: AnyStr) -> bool:
         if status not in self.Status.get_list():
@@ -113,7 +121,7 @@ class Account:
             self.Keys.ID: self.__id,
             self.Keys.MAX_ANO_SIZE: self.__max_ano_size,
             self.Keys.AC_ID_LIST: self.__ac_id_list,
-            self.Keys.INVITER_ID: self.__inviter,
+            self.Keys.INVITER_ID: self.__inviter_id,
             self.Keys.LOGS: self.__logs,
             self.Keys.IC_MARGIN: self.__ic_margin,
 

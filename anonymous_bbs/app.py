@@ -1,5 +1,5 @@
+import json
 import logging
-import random
 
 import click
 
@@ -43,27 +43,19 @@ def cli(
     set_debug_level(debug)
 
     bm = BbsManager()
-    last_ac = None
-    ra = bm.create_root_account()
-    for _ in range(random.randint(5, 10)):
-        ic = bm.create_ic(ra.id)
-        if random.randint(0, 1) == 0:
-            na = bm.create_account_by_ic(ic.id)
-            for _ in range(random.randint(1, 2)):
-                last_ac = bm.create_ac(na.id)
+    bm.init()
 
-    if last_ac:
-        page = bm.post_page(last_ac.id, "HHHHHHHH", "new_group")
-        for i in range(20):
-            bm.append_page(page.id, last_ac.id, f"Floor: {i}")
+    token = bm.login(bm.get_admin_account().id)
+    admin = bm.get_account_by_token(token.id)
+    if not admin.ac_id_list:
+        ac_id = bm.create_ano_code(admin.id).id
+    else:
+        ac_id = admin.ac_id_list[0]
+    page = bm.post_page(ac_id, "Good day!")
+    for i in range(32):
+        page = bm.append_page(page.id, ac_id, f"Yes, {i} times")
 
-    old_token = bm.login(ra.id)
-    print(old_token.to_dict())
-    ra_id = bm.get_owner_id_by_token_id(old_token.id)
-    new_token = bm.login(ra_id)
-
-    print(new_token.id)
-    print(bm.get_owner_id_by_token_id(old_token.id))
+    print(json.dumps(bm.get_page_with_floors(page.id, 1000, 1), indent=2))
 
     bm.show()
 

@@ -3,7 +3,7 @@ __all__ = [
 ]
 
 import time
-from typing import AnyStr
+from typing import AnyStr, Optional
 
 from anonymous_bbs.utils.id_utils import get_uuid
 from anonymous_bbs.utils.type_utils import EnumType
@@ -33,6 +33,14 @@ class Floor:
         return self.__id
 
     @property
+    def owner_ac(self) -> AnyStr:
+        return self.__owner_ac
+
+    @property
+    def content(self) -> AnyStr:
+        return self.__content
+
+    @property
     def create_date(self) -> float:
         return self.__create_date
 
@@ -48,3 +56,12 @@ class Floor:
             self.Keys.HIDE: self.__hide,
             self.Keys.CREATE_DATE: self.__create_date,
         }
+
+    def to_display_dict(self) -> Optional[dict]:
+        if self.__hide:
+            return None
+
+        data = self.to_dict()
+        data.pop(self.Keys.HIDE, False)
+        data[self.Keys.OWNER_AC] = data[self.Keys.ID][:8]
+        return data

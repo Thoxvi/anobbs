@@ -49,6 +49,12 @@ class AccountManager(BaseDbConnect):
             in self._query({Account.Keys.IS_ROOT: True})
         ]
 
+    def get_first_root_account(self) -> Optional[Account]:
+        ac = self._query_one({Account.Keys.IS_ROOT: True})
+        if ac:
+            ac = Account(**ac)
+        return ac
+
     def create_ic(self, a_id: AnyStr) -> Optional[InvitationCode]:
         account = self.get_account(a_id)
         if not account:
