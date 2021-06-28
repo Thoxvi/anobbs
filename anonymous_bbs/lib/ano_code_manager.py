@@ -25,7 +25,7 @@ class AnoCodeManager(BaseDbConnect):
         return self._update(ac.to_dict())
 
     def get_ac(self, ac_id: AnyStr) -> Optional[AnoCode]:
-        data = self._query_one({self.ID_KEY: ac_id})
+        data = self._query_one({self._key_id: ac_id})
         return AnoCode(**data) if data else None
 
     def block_ac(self, ac_id: AnyStr) -> bool:

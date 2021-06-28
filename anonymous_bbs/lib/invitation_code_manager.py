@@ -19,10 +19,10 @@ class InvitationCodeManager(BaseDbConnect):
         return self._update(ic.to_dict())
 
     def is_ic_used(self, ic_id: AnyStr) -> bool:
-        return self._count({self.ID_KEY: ic_id, InvitationCode.Keys.IS_USED: True}) > 0
+        return self._count({self._key_id: ic_id, InvitationCode.Keys.IS_USED: True}) > 0
 
     def get_ic(self, ic_id: AnyStr) -> Optional[InvitationCode]:
-        data = self._query_one({self.ID_KEY: ic_id})
+        data = self._query_one({self._key_id: ic_id})
         return InvitationCode(**data) if data else None
 
     def use_ic(self, ic_id: AnyStr, bid: AnyStr) -> bool:

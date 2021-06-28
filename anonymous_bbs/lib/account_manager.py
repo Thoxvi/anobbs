@@ -39,7 +39,7 @@ class AccountManager(BaseDbConnect):
         return self._update(account.to_dict())
 
     def get_account(self, a_id: AnyStr) -> Optional[Account]:
-        data = self._query_one({self.ID_KEY: a_id})
+        data = self._query_one({self._key_id: a_id})
         return Account(**data) if data else None
 
     def get_all_root_accounts(self) -> List[Account]:
