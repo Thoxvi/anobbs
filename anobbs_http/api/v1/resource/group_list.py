@@ -13,5 +13,5 @@ class GroupList(BaseResource):
         return self.return_ok([
             group.name
             for group
-            in bbs_manager.get_all_group()
+            in bbs_manager.get_not_hidden_group()
         ])

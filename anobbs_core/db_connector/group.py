@@ -65,7 +65,7 @@ class GroupDbConnector(BaseDbConnect):
             in self._query(Group.Keys.CREATE_DATE)
         ]
 
-    def get_no_not_hidden(self) -> List[Group]:
+    def get_not_hidden_group(self) -> List[Group]:
         return [
             Group(**group_data)
             for group_data

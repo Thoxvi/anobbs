@@ -17,6 +17,12 @@ class FloorDbConnector(BaseDbConnect):
     def __init__(self, uri: AnyStr):
         super().__init__(uri, self.__TABLE_NAME)
 
+    def get_floor(self, floor_id: AnyStr) -> Optional[Floor]:
+        floor = self.query_one({Floor.Keys.ID: floor_id})
+        if floor:
+            floor = Floor(**floor)
+        return floor
+
     def create_floor(self, ac_id: AnyStr, content: AnyStr) -> Optional[Floor]:
         if not ano_code_db_connector.check_ac(ac_id):
             return None

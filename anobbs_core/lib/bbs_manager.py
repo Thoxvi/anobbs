@@ -32,7 +32,10 @@ class BbsManager:
         if not admin:
             logger.error("Create admin error")
         else:
-            logger.info(f"Admin ID: {admin.id}")
+            logger.warning(f"-------------------")
+            logger.warning(f"AnoBBS Manager inited")
+            logger.warning(f"\tAdmin ID: {admin.id}")
+            logger.warning(f"-------------------")
 
     @staticmethod
     def __check_token_is_admin(token_id: AnyStr) -> bool:
@@ -183,12 +186,16 @@ class BbsManager:
         return group_db_connector.get_all_group()
 
     @staticmethod
-    def get_no_not_hidden() -> List[Group]:
-        return group_db_connector.get_no_not_hidden()
+    def get_not_hidden_group() -> List[Group]:
+        return group_db_connector.get_not_hidden_group()
 
     @staticmethod
     def get_account_id_by_token(token_id: AnyStr) -> Optional[AnyStr]:
         return token_db_connector.get_account_id_by_token_id(token_id)
+
+    @staticmethod
+    def get_floor(floor_id: AnyStr) -> Optional[Floor]:
+        return floor_db_connector.get_floor(floor_id)
 
     @staticmethod
     def get_account_by_token(token_id: AnyStr) -> Optional[Account]:
