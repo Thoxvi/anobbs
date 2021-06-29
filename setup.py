@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-from anonymous_bbs import AppConstant
+from anobbs_core import AppConstant
 
 setup(
     name=AppConstant.NAME,
@@ -13,13 +13,22 @@ setup(
     zip_safe=False,
     include_package_data=True,
     install_requires=[
+        # Core
         "click",
         "pyyaml",
         "requests",
         "treelib",
         "pymongo",
+
+        # Http Module
+        "flask",
+        "flask-restful",
+        "flask-cors",
     ],
     entry_points={
-        "console_scripts": [f'anobbs=anonymous_bbs.app:cli']
+        "console_scripts": [
+            f'anobbs=anonymous_bbs.app:cli'
+            f'anobbs_http=anonymous_bbs.app:cli'
+        ],
     },
 )
