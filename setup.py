@@ -26,9 +26,6 @@ setup(
         "flask-cors",
     ],
     entry_points={
-        "console_scripts": [
-            f'anobbs=anonymous_bbs.app:cli'
-            f'anobbs_http=anonymous_bbs.app:cli'
-        ],
+        "console_scripts": [],
     },
 )
