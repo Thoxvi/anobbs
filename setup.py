@@ -14,9 +14,6 @@ setup(
     include_package_data=True,
     install_requires=[
         # Core
-        "click",
-        "pyyaml",
-        "requests",
         "treelib",
         "pymongo",
 
