@@ -93,26 +93,32 @@ class GroupDbConnector(BaseDbConnect):
         page_list = [
             Page(**page_data)
             for page_data
-            in page_db_connector.query({"$or": [
-                {
-                    Page.Keys.ID: pid,
-                    Page.Keys.HIDE: False
-                }
-                for pid
-                in page_ids
-            ]})
+            in page_db_connector.query(
+                {"$or": [
+                    {
+                        Page.Keys.ID: pid,
+                        Page.Keys.HIDE: False
+                    }
+                    for pid
+                    in page_ids
+                ]},
+                sort_key=Page.Keys.CREATE_DATE,
+                sort_rule=-1,
+            )
         ]
         first_floor_list = [
             Floor(**floor)
             for floor
-            in floor_db_connector.query({"$or": [
-                {
-                    Floor.Keys.ID: page.first_floor_id,
-                    Floor.Keys.HIDE: False
-                }
-                for page
-                in page_list
-            ]})
+            in floor_db_connector.query(
+                {"$or": [
+                    {
+                        Floor.Keys.ID: page.first_floor_id,
+                        Floor.Keys.HIDE: False
+                    }
+                    for page
+                    in page_list
+                ]}
+            )
         ]
 
         pages = []

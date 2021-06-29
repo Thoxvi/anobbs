@@ -63,14 +63,16 @@ class AccountDbConnector(BaseDbConnect):
         data["ac_list"] = [
             AnoCode(**ac_data).to_display_dict()
             for ac_data
-            in ano_code_db_connector.query({"$or": [
-                {
-                    AnoCode.Keys.ID: ac_id
-                }
-                for ac_id
-                in data.pop(Account.Keys.AC_ID_LIST, [])
-            ]
-            })
+            in ano_code_db_connector.query(
+                {"$or": [
+                    {AnoCode.Keys.ID: ac_id}
+                    for ac_id
+                    in data.pop(Account.Keys.AC_ID_LIST, [])
+                ]
+                },
+                sort_key=AnoCode.Keys.CREATE_DATE,
+                sort_rule=1,
+            )
             if ac_data
         ]
         data["ic_list"] = [

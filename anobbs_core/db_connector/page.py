@@ -41,13 +41,17 @@ class PageDbConnector(BaseDbConnect):
         return [
             Floor(**floor)
             for floor
-            in floor_db_connector.query({"$or": [
-                {
-                    Floor.Keys.ID: fid,
-                }
-                for fid
-                in floor_ids
-            ]})
+            in floor_db_connector.query(
+                {"$or": [
+                    {
+                        Floor.Keys.ID: fid,
+                    }
+                    for fid
+                    in floor_ids
+                ]},
+                sort_key=Floor.Keys.CREATE_DATE,
+                sort_rule=1,
+            )
         ]
 
     def create_page(
