@@ -258,14 +258,17 @@ class BbsManager:
         return None
 
     @staticmethod
-    def block_ano_code_by_floor_no(token_id: AnyStr, floor_no: AnyStr) -> bool:
+    def block_ano_code_by_floor_no(token_id: AnyStr, floor_no: AnyStr) -> Optional[AnyStr]:
         if not BbsManager.__check_token_is_admin(token_id):
-            return False
+            return None
         floor = floor_db_connector.query_one({Floor.Keys.NO: floor_no})
         if not floor:
-            return False
+            return None
         floor = Floor(**floor)
-        return ano_code_db_connector.block_ac(floor.owner_ac)
+        if ano_code_db_connector.block_ac(floor.owner_ac):
+            return floor.owner_ac
+        else:
+            return None
 
     @staticmethod
     def block_ano_code(token_id: AnyStr, ano_code: AnyStr) -> bool:
