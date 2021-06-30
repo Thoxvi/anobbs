@@ -4,6 +4,7 @@ __all__ = [
 ]
 
 import logging
+import time
 from typing import List, Optional, AnyStr
 
 from anobbs_core.bean import Account, InvitationCode, AnoCode, Page, Group, Token, Floor
@@ -21,6 +22,7 @@ from anobbs_core.utils.id_utils import get_uuid
 
 ROOT_MAX_ANO_SIZE = 2 ** 10
 ROOT_IC_MARGIN = 2 ** 10
+MIN_CREATE_IC_TIME = 6 * 60 * 60
 
 logger = logging.getLogger("AnoBBS")
 
@@ -100,6 +102,9 @@ class BbsManager:
 
     @staticmethod
     def create_invitation_code_by_account(account_id: AnyStr) -> Optional[InvitationCode]:
+        account = account_db_connector.get_account(account_id)
+        if not account.is_root and time.time() - account.create_date < MIN_CREATE_IC_TIME:
+            return None
         ic = account_db_connector.create_ic(account_id)
         if ic:
             logger.info(

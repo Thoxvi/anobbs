@@ -15,6 +15,7 @@ class AnoCode:
         LOGS = "logs"
         OWNER = "owner"
         CREATE_DATE = "create_date"
+        LAST_SPEAKING_TIME = "last_speaking_time"
         BLOCK_DATE = "block_date"
         IS_BLOCKED = "is_blocked"
 
@@ -27,6 +28,7 @@ class AnoCode:
             self.__owner = data[self.Keys.OWNER]
 
             self.__id = data.get(self.Keys.ID, get_uuid())
+            self.__last_speaking_time = data.get(self.Keys.LAST_SPEAKING_TIME, 0)
             self.__logs = data.get(self.Keys.LOGS, [])
             if len(self.__logs) == 0:
                 self.__logs.append((self.Status.CREATED, time.time()))
@@ -36,6 +38,10 @@ class AnoCode:
     @property
     def id(self) -> AnyStr:
         return self.__id
+
+    @property
+    def last_speaking_time(self) -> AnyStr:
+        return self.__last_speaking_time
 
     @property
     def owner(self) -> AnyStr:
@@ -65,6 +71,7 @@ class AnoCode:
             self.Keys.LOGS: self.__logs,
 
             self.Keys.CREATE_DATE: self.create_date,
+            self.Keys.LAST_SPEAKING_TIME: self.__last_speaking_time,
             self.Keys.IS_BLOCKED: self.is_blocked,
         }
 
