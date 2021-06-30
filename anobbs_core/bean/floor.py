@@ -35,6 +35,10 @@ class Floor:
         return self.__id
 
     @property
+    def no(self) -> AnyStr:
+        return self.__no
+
+    @property
     def owner_ac(self) -> AnyStr:
         return self.__owner_ac
 

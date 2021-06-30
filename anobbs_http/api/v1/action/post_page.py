@@ -30,6 +30,6 @@ class PostPage(BaseResource):
 
         page = bbs_manager.post_page(**params)
         if page:
-            return self.return_ok(bbs_manager.get_page_with_floors(page.id))
+            return self.return_ok(page.id)
         else:
             return self.return_error("Post page failed")
