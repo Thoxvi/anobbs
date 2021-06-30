@@ -60,6 +60,7 @@ class AccountDbConnector(BaseDbConnect):
         if not account:
             return None
         data = account.to_display_dict()
+        ac_id_list = data.pop(Account.Keys.AC_ID_LIST, [])
         data["ac_list"] = [
             AnoCode(**ac_data).to_display_dict()
             for ac_data
@@ -67,14 +68,14 @@ class AccountDbConnector(BaseDbConnect):
                 {"$or": [
                     {AnoCode.Keys.ID: ac_id}
                     for ac_id
-                    in data.pop(Account.Keys.AC_ID_LIST, [])
+                    in ac_id_list
                 ]
                 },
                 sort_key=AnoCode.Keys.CREATE_DATE,
                 sort_rule=1,
             )
             if ac_data
-        ]
+        ] if ac_id_list else []
         data["ic_list"] = [
             InvitationCode(**ic_data).to_display_dict()
             for ic_data

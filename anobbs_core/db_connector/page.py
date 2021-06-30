@@ -52,7 +52,7 @@ class PageDbConnector(BaseDbConnect):
                 sort_key=Floor.Keys.CREATE_DATE,
                 sort_rule=1,
             )
-        ]
+        ] if floor_ids else []
 
     def create_page(
             self,

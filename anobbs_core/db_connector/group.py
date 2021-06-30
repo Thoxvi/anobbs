@@ -105,7 +105,7 @@ class GroupDbConnector(BaseDbConnect):
                 sort_key=Page.Keys.CREATE_DATE,
                 sort_rule=-1,
             )
-        ]
+        ] if page_ids else []
         first_floor_list = [
             Floor(**floor)
             for floor
@@ -119,7 +119,7 @@ class GroupDbConnector(BaseDbConnect):
                     in page_list
                 ]}
             )
-        ]
+        ] if page_list else []
 
         pages = []
         for i in range(len(first_floor_list)):
