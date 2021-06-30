@@ -6,5 +6,6 @@ from .create_ic import CreateInvitationCode
 from .login import Login
 from .post_page import PostPage
 from .query_account import QueryAccount
+from .query_account_tree import QueryAccountTree
 from .query_group_with_pages import QueryGroupWithPages
 from .query_page_with_floors import QueryPageWithFloors

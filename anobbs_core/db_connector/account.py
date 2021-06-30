@@ -109,6 +109,9 @@ class AccountDbConnector(BaseDbConnect):
             return token_db_connector.create_token(a_id)
         return None
 
+    def get_account_tree(self) -> AnyStr:
+        return str(self.__make_account_tree().show(stdout=False))
+
     def show(self):
         print(f"Account Info:")
         print(f"\tNumber of all account:\t{self._count()}")

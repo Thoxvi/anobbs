@@ -258,6 +258,12 @@ class BbsManager:
         return None
 
     @staticmethod
+    def get_account_tree_by_token(token_id: AnyStr) -> Optional[AnyStr]:
+        if BbsManager.__check_token_is_admin(token_id):
+            return account_db_connector.get_account_tree()
+        return None
+
+    @staticmethod
     def block_ano_code_by_floor_no(token_id: AnyStr, floor_no: AnyStr) -> Optional[AnyStr]:
         if not BbsManager.__check_token_is_admin(token_id):
             return None
