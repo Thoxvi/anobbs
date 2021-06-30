@@ -87,8 +87,8 @@ class GroupDbConnector(BaseDbConnect):
         if page_size <= 0 or page_index < 1:
             return []
         page_index -= 1
-        page_ids = group.page_id_list[page_size * page_index:
-                                      page_size * (page_index + 1)]
+        page_ids = list(reversed(group.page_id_list))[page_size * page_index:
+                                                      page_size * (page_index + 1)]
 
         page_list = [
             Page(**page_data)
