@@ -96,14 +96,14 @@ class GroupDbConnector(BaseDbConnect):
                     for pid
                     in group.page_id_list
                 ]},
-                sort_key=Page.Keys.CREATE_DATE,
+                sort_key=Page.Keys.UPDATE_DATE,
                 sort_rule=-1,
                 page_index=page_index,
                 page_size=page_size,
             )
         ] if group.page_id_list else []
-        first_floor_list = [
-            Floor(**floor)
+        first_floor_map = {
+            floor.get(Floor.Keys.ID): Floor(**floor)
             for floor
             in floor_db_connector.query(
                 {"$or": [
@@ -117,14 +117,14 @@ class GroupDbConnector(BaseDbConnect):
                 sort_key=Floor.Keys.CREATE_DATE,
                 sort_rule=-1,
             )
-        ] if page_list else []
+        } if page_list else []
 
         pages = []
-        for i in range(len(first_floor_list)):
-            page = page_list[i].to_display_dict()
-            page.pop(Page.Keys.FLOOR_ID_LIST, [])
-            page.pop(Page.Keys.FIRST_FLOOR_ID, "")
-            page["first_floor"] = first_floor_list[i].to_display_dict()
+        for page_obj in page_list:
+            page = page_obj.to_display_dict()
+            page["floor_count"] = len(page.pop(Page.Keys.FLOOR_ID_LIST, []))
+            floor_id = page.pop(Page.Keys.FIRST_FLOOR_ID, "")
+            page["first_floor"] = first_floor_map.get(floor_id).to_display_dict()
             pages.append(page)
 
         return pages
