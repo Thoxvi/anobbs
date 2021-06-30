@@ -17,6 +17,7 @@ class CreateAccount(BaseResource):
     })
     def post(self):
         account = bbs_manager.create_account_by_ic(request.json["invitation_code"])
+        bbs_manager.create_ano_code_by_account(account.id)
         if account:
             return self.return_ok(account.id)
         else:
