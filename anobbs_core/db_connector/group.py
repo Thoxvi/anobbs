@@ -117,7 +117,9 @@ class GroupDbConnector(BaseDbConnect):
                     }
                     for page
                     in page_list
-                ]}
+                ]},
+                sort_key=Floor.Keys.CREATE_DATE,
+                sort_rule=-1,
             )
         ] if page_list else []
 
