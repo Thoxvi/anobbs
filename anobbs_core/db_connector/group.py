@@ -84,12 +84,6 @@ class GroupDbConnector(BaseDbConnect):
         if group.hide:
             return []
 
-        if page_size <= 0 or page_index < 1:
-            return []
-        page_index -= 1
-        page_ids = list(reversed(group.page_id_list))[page_size * page_index:
-                                                      page_size * (page_index + 1)]
-
         page_list = [
             Page(**page_data)
             for page_data
@@ -100,12 +94,14 @@ class GroupDbConnector(BaseDbConnect):
                         Page.Keys.HIDE: False
                     }
                     for pid
-                    in page_ids
+                    in group.page_id_list
                 ]},
                 sort_key=Page.Keys.CREATE_DATE,
                 sort_rule=-1,
+                page_index=page_index,
+                page_size=page_size,
             )
-        ] if page_ids else []
+        ] if group.page_id_list else []
         first_floor_list = [
             Floor(**floor)
             for floor
