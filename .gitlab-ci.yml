@@ -1,3 +1,13 @@
+stages:
+  - lint
+  - build
+  - test
+  - deploy
+
+lint:
+  stage: lint
+  script:
+    - cat /etc/kubernetes/kubelet.conf
 build:
   image: docker:19.03.12
   stage: build
