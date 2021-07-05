@@ -5,8 +5,9 @@ build:
     - shared
   services:
     - name: docker:19.03.12-dind
-      command: ["--insecure-registry", "gitlab.thoxvi.com:4567"]
-
+      command: ["--insecure-registry=gitlab.thoxvi.com:4567"]
+  variables:
+    DOCKER_TLS_CERTDIR: ''
   script:
     - FULL_TAG=http://$CI_REGISTRY_IMAGE:latest
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD http://gitlab.thoxvi.com:4567
