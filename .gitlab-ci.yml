@@ -5,7 +5,7 @@ build:
     - shared
   services:
     - name: docker:19.03.12-dind
-      command: ["--insecure-registry", "http://gitlab.thoxvi.com:4567"]
+      command: ["--insecure-registry", "gitlab.thoxvi.com:4567"]
 
   script:
     - FULL_TAG=http://$CI_REGISTRY_IMAGE:latest
