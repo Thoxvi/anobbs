@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: anobbs
+  labels:
+    app: anobbs
+spec:
+  ports:
+    - port: 8080
+      targetPort: 80
+      nodePort: 30808
+  selector:
+    app: anobbs
+  type: LoadBalancer
+  externalIPs:
+    - 192.168.50.38
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anobbs
+  labels:
+    app: anobbs
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: anobbs
+  template:
+    metadata:
+      labels:
+        app: anobbs
+    spec:
+      containers:
+      - name: anobbs
+        image: gitlab.thoxvi.com:4567/publish/anobbs:latest
+        ports:
+        - containerPort: 80
