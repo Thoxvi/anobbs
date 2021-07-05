@@ -18,7 +18,7 @@ build:
 deploy:
   image:
     name: bitnami/kubectl:1.21.2
-    entrypoint: ["/bin/bash", "-c"]
+    entrypoint: ["/bin/bash"]
   stage: deploy
   tags:
     - shared
