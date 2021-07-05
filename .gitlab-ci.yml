@@ -12,7 +12,8 @@ lint:
   tags:
     - shared
   script:
-    - ls /
+    - kubectl version
+    - kubectl get nodes
 build:
   image: docker:19.03.12
   stage: build
