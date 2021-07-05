@@ -15,14 +15,17 @@ build:
     - docker push $FULL_TAG
     - docker logout $CI_REGISTRY
 
-deploy_staging:
-  image: bitnami/kubectl:1.21.2
+deploy:
+  image:
+    name: bitnami/kubectl:1.21.2
+    entrypoint: ["/bin/bash", "-c"]
   stage: deploy
   tags:
     - shared
   environment:
-    name: anobbs-production
+    name: production
+    kubernetes:
+      namespace: anobbs-production
   script:
-    - mkdir $HOME/.kube && cat $KUBE_CONFIG > $HOME/.kube/config
-    - kubectl get nods
-
+    - kubectl version
+    - kubectl get node
