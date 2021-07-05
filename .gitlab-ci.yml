@@ -1,7 +1,6 @@
 stages:
   - lint
   - build
-  - test
   - deploy
 
 lint:
@@ -9,11 +8,18 @@ lint:
   image:
     name: bitnami/kubectl
     entrypoint: [""]
+  environment:
+    name: production
   tags:
     - shared
   script:
     - kubectl version
     - kubectl get nodes
+    - kubectl get ns
+    - kubectl get pods
+    - env
+    - env|grep -i namespace
+
 build:
   image: docker:19.03.12
   stage: build
@@ -21,7 +27,7 @@ build:
     - shared
   services:
     - name: docker:19.03.12-dind
-      command: ["--insecure-registry=gitlab.thoxvi.com:4567"]
+      command: [ "--insecure-registry=gitlab.thoxvi.com:4567" ]
   variables:
     DOCKER_TLS_CERTDIR: ''
   script:
@@ -33,9 +39,13 @@ build:
 
 deploy:
   stage: deploy
-  tags:
-    - shared
+  image:
+    name: bitnami/kubectl
+    entrypoint: [""]
   environment:
     name: production
+  tags:
+    - shared
   script:
-    - ls -lha ~/.kube
+    - kubectl version
+    - cd .k8s
