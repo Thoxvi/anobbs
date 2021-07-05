@@ -6,7 +6,9 @@ stages:
 
 lint:
   stage: lint
-  image: bitnami/kubectl
+  image:
+    name: bitnami/kubectl
+    entrypoint: ["/bin/bash"]
   tags:
     - shared
   script: version
