@@ -12,7 +12,7 @@ lint:
   tags:
     - shared
   script:
-    - mkdir -p $HOME/.kube && cat $KUBE_CONFIG > $HOME/.kube/config
+    - mkdir -p /root/.kube && cat $KUBE_CONFIG > /root/.kube/config
     - kubectl version
     - kubectl get nodes
 build:
