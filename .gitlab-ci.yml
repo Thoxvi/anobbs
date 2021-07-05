@@ -16,12 +16,10 @@ build:
     - docker logout $CI_REGISTRY
 
 deploy:
-  image: bitnami/kubectl:1.21.2
   stage: deploy
   tags:
     - shared
   environment:
     name: production
   script:
-    - version
-    - get node
+    - sleep 1000
