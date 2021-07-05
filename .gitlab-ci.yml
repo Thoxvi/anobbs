@@ -6,6 +6,8 @@ stages:
 
 lint:
   stage: lint
+  tags:
+    - shared
   script:
     - cat /etc/kubernetes/kubelet.conf
 build:
