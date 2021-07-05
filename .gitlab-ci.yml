@@ -1,5 +1,18 @@
+build:
+  image: docker:19.03.12
+  stage: build
+  services:
+    - docker:19.03.12-dind
+  script:
+    - FULL_TAG=$CI_REGISTRY/$CI_PROJECT_PATH:latest
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $FULL_TAG .
+    - docker push $FULL_TAG
+
 deploy_staging:
   stage: deploy
+  tags:
+    - shared
   script:
     - echo "Deploy to staging server"
   environment:
