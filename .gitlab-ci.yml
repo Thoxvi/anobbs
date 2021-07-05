@@ -8,7 +8,7 @@ lint:
   stage: lint
   image:
     name: bitnami/kubectl
-    entrypoint: ["/bin/bash", "-c"]
+    entrypoint: ["/bin/sh", "-c"]
   tags:
     - shared
   script:
