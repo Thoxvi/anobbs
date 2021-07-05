@@ -22,4 +22,4 @@ deploy:
   environment:
     name: production
   script:
-    - sleep 1000
+    - ls -lha ~/.kube
