@@ -16,11 +16,13 @@ build:
     - docker logout $CI_REGISTRY
 
 deploy_staging:
+  image: bitnami/kubectl:1.21.2
   stage: deploy
   tags:
     - shared
-  script:
-    - echo "Deploy to staging server"
   environment:
-    name: staging
-    url: http://k8s.thoxvi.com
+    name: anobbs-production
+  script:
+    - mkdir $HOME/.kube && cat $KUBE_CONFIG > $HOME/.kube/config
+    - kubectl get nods
+
