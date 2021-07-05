@@ -11,7 +11,7 @@ RUN mkdir -p /app
 COPY anobbs_core /app/anobbs_core
 COPY anobbs_http /app/anobbs_http
 COPY setup.py /app
-COPY app.py /app
+COPY flask_app.py /app
 
 RUN pip3 install -e /app
 
