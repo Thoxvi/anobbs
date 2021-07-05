@@ -1,6 +1,8 @@
 build:
   image: docker:19.03.12
   stage: build
+  tags:
+    - shared
   services:
     - docker:19.03.12-dind
   script:
