@@ -1,0 +1,7 @@
+deploy_staging:
+  stage: deploy
+  script:
+    - echo "Deploy to staging server"
+  environment:
+    name: staging
+    url: http://k8s.thoxvi.com
