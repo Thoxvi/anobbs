@@ -9,7 +9,7 @@ build:
   variables:
     DOCKER_TLS_CERTDIR: ''
   script:
-    - FULL_TAG=http://$CI_REGISTRY_IMAGE:latest
+    - FULL_TAG=$CI_REGISTRY_IMAGE:latest
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD http://gitlab.thoxvi.com:4567
     - docker build -t $FULL_TAG .
     - docker push $FULL_TAG
