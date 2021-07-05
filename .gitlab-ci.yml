@@ -11,7 +11,8 @@ lint:
     entrypoint: ["/bin/bash"]
   tags:
     - shared
-  script: version
+  script:
+    - ls /
 build:
   image: docker:19.03.12
   stage: build
