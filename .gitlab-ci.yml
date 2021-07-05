@@ -6,7 +6,7 @@ build:
   services:
     - docker:19.03.12-dind
   script:
-    - FULL_TAG=$CI_REGISTRY/$CI_PROJECT_PATH:latest
+    - FULL_TAG=`echo $CI_REGISTRY/$CI_PROJECT_PATH:latest|sed 's/^https/http/g'`
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $FULL_TAG .
     - docker push $FULL_TAG
