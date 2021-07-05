@@ -6,10 +6,10 @@ stages:
 
 lint:
   stage: lint
+  image: bitnami/kubectl
   tags:
     - shared
-  script:
-    - cat /etc/kubernetes/kubelet.conf
+  script: version
 build:
   image: docker:19.03.12
   stage: build
