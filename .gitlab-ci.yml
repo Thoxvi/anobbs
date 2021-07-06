@@ -34,6 +34,7 @@ deploy:
     - helm version
     - helm repo add bitnami https://charts.bitnami.com/bitnami
     - set +e
+    - kubectl create ns ${KUBE_NAMESPACE} | true
     - |
       kubectl create -n ${KUBE_NAMESPACE} secret docker-registry regcred \
         --docker-server=gitlab.thoxvi.com:4567 \
