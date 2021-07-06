@@ -35,15 +35,21 @@ deploy:
     - helm repo add bitnami https://charts.bitnami.com/bitnami
     - set +e
     - |
+      kubectl create -n anobbs-153-anobbs-a6x7e4 secret docker-registry regcred \
+        --docker-server=gitlab.thoxvi.com:4567 \
+        --docker-username=project_${CI_PROJECT_ID}_bot \
+        --docker-password=${PROJECT_READ_REGISTRY_TOKEN} \
+        --docker-email=Thoxvi@Gmail.com | true
+    - |
       helm install \
         --create-namespace \
-        -n $KUBE_NAMESPACE \
+        -n ${KUBE_NAMESPACE} \
         mongo bitnami/mongodb \
         --set persistence.existingClaim=local-pvc-mongo \
-        --set global.namespaceOverride=$KUBE_NAMESPACE | true
+        --set global.namespaceOverride=${KUBE_NAMESPACE} | true
     - set -e
     - cd .k8s
     - sed -i 's/$ANOBBS_HASH_IMAGE_TAG/'"$CI_COMMIT_SHORT_SHA"'/' anobbs-deployment.yml
     - cat anobbs-deployment.yml
-    - kubectl apply -f local-pvc-mongo.yml -n $KUBE_NAMESPACE
-    - kubectl apply -f anobbs-deployment.yml -n $KUBE_NAMESPACE
+    - kubectl apply -f local-pvc-mongo.yml -n ${KUBE_NAMESPACE}
+    - kubectl apply -f anobbs-deployment.yml -n ${KUBE_NAMESPACE}
