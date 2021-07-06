@@ -3,7 +3,7 @@ kind: StorageClass
 metadata:
   name: local-storage
 provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
+volumeBindingMode: Immediate
 reclaimPolicy: Retain
 ---
 apiVersion: v1
@@ -14,14 +14,14 @@ metadata:
     local-pv: mongo
 spec:
   capacity:
-    storage: 4Gi
+    storage: 32Gi
   volumeMode: Filesystem
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
-    path: /data
+    path: /mnt/disks/sdb
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -37,11 +37,11 @@ metadata:
   name: local-pvc-mongo
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   storageClassName: local-storage
   resources:
     requests:
-      storage: 4Gi
+      storage: 32Gi
   selector:
     matchLabels:
       local-pv: mongo
