@@ -17,7 +17,7 @@ spec:
     storage: 32Gi
   volumeMode: Filesystem
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
@@ -37,7 +37,7 @@ metadata:
   name: local-pvc-mongo
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   storageClassName: local-storage
   resources:
     requests:
