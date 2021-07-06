@@ -32,6 +32,6 @@ deploy:
     - kubectl version
     - helm version
     - helm repo add bitnami https://charts.bitnami.com/bitnami
-    - helm install --create-namespace -n $KUBE_NAMESPACE mongo bitnami/mongodb | true
+    - helm install --create-namespace -n $KUBE_NAMESPACE mongo bitnami/mongodb --set persistence.enabled=true,persistence.size=5Gi | true
     - cd .k8s
     - kubectl apply -f anobss-deployment.yml -n $KUBE_NAMESPACE
