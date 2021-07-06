@@ -40,6 +40,7 @@ deploy:
         -n $KUBE_NAMESPACE \
         mongo bitnami/mongodb \
         --set persistence.size=5Gi \
+        --set persistence.existingClaim=mongo-pvc \
         --set global.storageClass=local-path-retain \
         --set global.namespaceOverride=$KUBE_NAMESPACE | true
     - set -e
