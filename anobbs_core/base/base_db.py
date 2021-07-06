@@ -9,7 +9,6 @@ __all__ = [
 import copy
 import hashlib
 import logging
-import time
 from functools import wraps
 from typing import List, Dict, AnyStr, Optional
 
@@ -46,7 +45,7 @@ def check_db_connect(func):
     def wrapper(self, *args, **kwargs) -> func:
         while True:
             if not self.init_db_client():
-                DbError.raise_error(f"Connect DB error")
+                DbError.raise_error(f"Connect DB error: {self._db_uri}")
                 # logger.warning("Get DB error, may be the DB has not been started, will retry in 1s")
                 # time.sleep(1)
             else:
