@@ -40,7 +40,7 @@ spec:
         - containerPort: 80
         env:
           - name: MONGO_DB_NAME
-            value: mongo-mongodb-0.mongo-mongodb-headless:27017,mongo-mongodb-1.mongo-mongodb-headless:27017
+            value: mongo-mongodb
           - name: MONGO_INITDB_ROOT_USERNAME
             value: root
           - name: MONGO_INITDB_ROOT_PASSWORD

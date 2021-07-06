@@ -34,9 +34,9 @@ def get_mongo_db_uri():
     mongo_passwd = gv(MongoResource.MONGO_INITDB_ROOT_PASSWORD)
 
     if not mongo_username and not mongo_passwd:
-        mongo_uri = f'mongodb://{db}/'
+        mongo_uri = f'mongodb://{db}:27017/'
     else:
-        mongo_uri = f'mongodb://{mongo_username}:{mongo_passwd}@{db}/'
+        mongo_uri = f'mongodb://{mongo_username}:{mongo_passwd}@{db}:27017/'
     return mongo_uri
 
 

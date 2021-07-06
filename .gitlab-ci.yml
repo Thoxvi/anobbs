@@ -39,7 +39,6 @@ deploy:
         --create-namespace \
         -n $KUBE_NAMESPACE \
         mongo bitnami/mongodb \
-        --set architecture=replicaset \
         --set persistence.size=5Gi \
         --set global.storageClass=local-path \
         --set global.namespaceOverride=$KUBE_NAMESPACE | true
