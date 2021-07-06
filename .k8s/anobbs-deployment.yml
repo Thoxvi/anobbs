@@ -31,6 +31,8 @@ spec:
       labels:
         app: anobbs
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
       - name: anobbs
         image: gitlab.thoxvi.com:4567/publish/anobbs:latest
