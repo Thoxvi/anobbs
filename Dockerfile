@@ -1,4 +1,4 @@
-FROM alpine:3.14.0
+FROM alpine:3.13.0
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
 RUN apk add --no-cache python3 bash openssh-client py3-paramiko py3-pip vim curl tzdata py3-gunicorn libevent-dev
 RUN apk add --no-cache -X http://mirrors.aliyun.com/alpine/edge/testing py3-gevent libev
