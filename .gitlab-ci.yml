@@ -38,9 +38,8 @@ deploy:
         --create-namespace \
         -n $KUBE_NAMESPACE \
         mongo bitnami/mongodb \
-        --set persistence.enabled=true \
+        --set replicaset=replicaset \
         --set persistence.size=5Gi \
-        --set global.storageClass=fast \
         --set global.namespaceOverride=$KUBE_NAMESPACE | true
     - set -e
     - cd .k8s
