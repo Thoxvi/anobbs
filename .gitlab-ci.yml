@@ -13,10 +13,11 @@ build:
   variables:
     DOCKER_TLS_CERTDIR: ''
   script:
-    - FULL_TAG=$CI_REGISTRY_IMAGE:latest
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD http://gitlab.thoxvi.com:4567
-    - docker build -t $FULL_TAG .
-    - docker push $FULL_TAG
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME -t $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - docker push $CI_REGISTRY_IMAGE:latest
     - docker logout $CI_REGISTRY
 
 deploy:
@@ -44,4 +45,5 @@ deploy:
         --set global.namespaceOverride=$KUBE_NAMESPACE | true
     - set -e
     - cd .k8s
+    - sed -i 's/$ANOBBS_HASH_IMAGE_TAG/'"$CI_COMMIT_SHORT_SHA"'/' anobbs-deployment.yml
     - kubectl apply -f anobbs-deployment.yml -n $KUBE_NAMESPACE

@@ -35,7 +35,7 @@ spec:
         - name: regcred
       containers:
       - name: anobbs
-        image: gitlab.thoxvi.com:4567/publish/anobbs:latest
+        image: gitlab.thoxvi.com:4567/publish/anobbs:$ANOBBS_HASH_IMAGE_TAG
         ports:
         - containerPort: 80
         env:
