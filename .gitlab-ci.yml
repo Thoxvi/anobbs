@@ -35,7 +35,7 @@ deploy:
     - helm repo add bitnami https://charts.bitnami.com/bitnami
     - set +e
     - |
-      kubectl create -n anobbs-153-anobbs-a6x7e4 secret docker-registry regcred \
+      kubectl create -n ${KUBE_NAMESPACE} secret docker-registry regcred \
         --docker-server=gitlab.thoxvi.com:4567 \
         --docker-username=project_${CI_PROJECT_ID}_bot \
         --docker-password=${PROJECT_READ_REGISTRY_TOKEN} \
