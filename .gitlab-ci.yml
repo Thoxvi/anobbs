@@ -34,13 +34,13 @@ deploy:
     - helm repo add bitnami https://charts.bitnami.com/bitnami
     - set +e
     - |
-      helm install
-        --create-namespace
-        -n $KUBE_NAMESPACE
-        mongo bitnami/mongodb
-        --set persistence.enabled=true,
-              persistence.size=5Gi,
-              global.storageClass=fast,
+      helm install \
+        --create-namespace \
+        -n $KUBE_NAMESPACE \
+        mongo bitnami/mongodb \
+        --set persistence.enabled=true, \
+              persistence.size=5Gi, \
+              global.storageClass=fast, \
               global.namespaceOverride=$KUBE_NAMESPACE | true
     - set -e
     - cd .k8s
