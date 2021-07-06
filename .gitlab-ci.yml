@@ -1,24 +1,6 @@
 stages:
-  - lint
   - build
   - deploy
-
-lint:
-  stage: lint
-  image:
-    name: bitnami/kubectl
-    entrypoint: [""]
-  environment:
-    name: production
-  tags:
-    - shared
-  script:
-    - kubectl version
-    - kubectl get nodes
-    - kubectl get ns
-    - kubectl get pods
-    - env
-    - env|grep -i namespace
 
 build:
   image: docker:19.03.12
@@ -40,12 +22,16 @@ build:
 deploy:
   stage: deploy
   image:
-    name: bitnami/kubectl
-    entrypoint: [""]
+    name: dtzar/helm-kubectl:3.6.0
+    entrypoint: [ "" ]
   environment:
     name: production
   tags:
     - shared
   script:
     - kubectl version
+    - helm version
+    - helm repo add bitnami https://charts.bitnami.com/bitnami
+    - helm install --create-namespace -n $KUBE_NAMESPACE mongo bitnami/mongodb | true
     - cd .k8s
+    - kubectl apply -f anobss-deployment.yml -n $KUBE_NAMESPACE

@@ -46,8 +46,9 @@ def check_db_connect(func):
     def wrapper(self, *args, **kwargs) -> func:
         while True:
             if not self.init_db_client():
-                logger.warning("Get DB error, may be the DB has not been started, will retry in 1s")
-                time.sleep(1)
+                DbError.raise_error(f"Connect DB error")
+                # logger.warning("Get DB error, may be the DB has not been started, will retry in 1s")
+                # time.sleep(1)
             else:
                 break
         try:
