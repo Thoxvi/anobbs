@@ -46,11 +46,11 @@ deploy:
         --create-namespace \
         -n ${KUBE_NAMESPACE} \
         mongo bitnami/mongodb \
-        --set persistence.size=5Gi \
-        --set global.storageClass=local-path \
+        --set persistence.existingClaim=anobbs-mongo-pvc \
         --set global.namespaceOverride=${KUBE_NAMESPACE} | true
     - set -e
     - cd .k8s
     - sed -i 's/$ANOBBS_HASH_IMAGE_TAG/'"$CI_COMMIT_SHORT_SHA"'/' anobbs-deployment.yml
     - cat anobbs-deployment.yml
+    - kubectl apply -f anobbs-mongo-storage.yml -n ${KUBE_NAMESPACE}
     - kubectl apply -f anobbs-deployment.yml -n ${KUBE_NAMESPACE}
