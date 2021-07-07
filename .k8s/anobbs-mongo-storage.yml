@@ -11,7 +11,7 @@ spec:
     - ReadWriteMany
   nfs:
     server: nas.thoxvi.com
-    path: /data/anobbs/mongo
+    path: /data/anobbs_mongo
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -26,7 +26,7 @@ spec:
     - ReadWriteMany
   nfs:
     server: nas.thoxvi.com
-    path: /data/anobbs/redis
+    path: /data/anobbs_redis
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
