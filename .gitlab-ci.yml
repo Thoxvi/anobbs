@@ -47,6 +47,7 @@ deploy:
         -n ${KUBE_NAMESPACE} \
         mongo bitnami/mongodb \
         --set persistence.existingClaim=anobbs-mongo-pvc \
+        --set auth.rootPassword=${MONGO_PASSWORD} \
         --set global.namespaceOverride=${KUBE_NAMESPACE} | true
     - set -e
     - cd .k8s
